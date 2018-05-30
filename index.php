@@ -28,9 +28,8 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-sign-in-alt"></i> ВОЙТИ
                 </button>
-
-                <a href="#" class="btn btn-info" data-toggle="tooltip"
-                   data-placement="bottom" title="Регистрация">
+                <button type="button" data-toggle="modal" data-target="#registration"
+                class="btn btn-info" title="Регистрация">
                     <i class="far fa-address-card"></i>
                 </a>
             </form>
@@ -65,6 +64,23 @@
                             <p>Параграф с текстом</p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="registration">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Название окна</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Это модальное окно</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" type="button" data-dismiss="modal">Отмена</button>
                 </div>
             </div>
         </div>
