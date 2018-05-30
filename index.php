@@ -46,11 +46,13 @@
                 <div class="caption">
                     <p>Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren </p>
                     <div class="container">
-                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10"></div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                             <h5>
                                 Автор
                             </h5>
+                        </div>
+                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                             <h5>
