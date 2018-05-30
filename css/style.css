@@ -1,0 +1,36 @@
+a.spoiler:after{
+    content: " [-]";
+}
+
+a.spoiler.collapsed:after{
+    content: " [+]";
+}
+
+.breadcrumb > li + li: before{
+    content: "\f30b";
+    font-family: 'Font Awesome 5 Free';
+}
+
+@media screen and (max-width: 767px){
+    .masonry[data-columns]::before{
+        content: '1 .col-xs-12';
+    }
+}
+
+@media screen and (max-width: 768px) and (max-width: 991px){
+    .masonry[data-columns]::before{
+        content: '2 .col-xs-6';
+    }
+}
+
+@media screen and (max-width: 992px) and (max-width: 1199px){
+    .masonry[data-columns]::before{
+        content: '3 .col-xs-4';
+    }
+}
+
+@media screen and (max-width: 1200px){
+    .masonry[data-columns]::before{
+        content: '4 .col-xs-3';
+    }
+}
