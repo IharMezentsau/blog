@@ -92,7 +92,7 @@
                         <div class="form-group">
                             <input type="password" id="validPasswordReg" class="form-control" placeholder="Подтвердите пароль *" value="">
                         </div>
-
+                        
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-address-card"></i> Зарегистрироваться
