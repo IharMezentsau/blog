@@ -76,13 +76,33 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button class="close" type="button" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Название окна</h4>
+                    <h4 class="modal-title">Регистрация нового пользователя</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Это модальное окно</p>
+                    <form action="" class="navbar-form navbar-right">
+                        <div class="form-group">
+                            <input type="text" id="eMailReg" class="form-control" placeholder="Введите E-mail *" value="">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Введите Имя" value="">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="passwordReg" class="form-control" placeholder="Введите пароль *" value="">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="validPasswordReg" class="form-control" placeholder="Подтвердите пароль *" value="">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-address-card"></i> Зарегистрироваться
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-danger" type="button" data-dismiss="modal">Отмена</button>
+
+                <div class="modal-body">
+                    <p style="color: red">* Поля обязательные для заполнения</p>
                 </div>
             </div>
         </div>
