@@ -79,7 +79,7 @@
                     <h4 class="modal-title">Регистрация нового пользователя</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="" class="navbar-form navbar-right">
+                    <form action="">
                         <div class="form-group">
                             <input type="text" id="eMailReg" class="form-control" placeholder="Введите E-mail *" value="">
                         </div>
@@ -92,7 +92,7 @@
                         <div class="form-group">
                             <input type="password" id="validPasswordReg" class="form-control" placeholder="Подтвердите пароль *" value="">
                         </div>
-                        
+
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-address-card"></i> Зарегистрироваться
