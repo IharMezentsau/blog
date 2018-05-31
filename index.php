@@ -28,8 +28,8 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-sign-in-alt"></i> ВОЙТИ
                 </button>
-                <button type="button" data-toggle="modal" data-target="#registration"
-                class="btn btn-info" title="Регистрация">
+                <button type="button" data-toggle="modal" data-tooltip="tooltip" data-target="#registration"
+                class="btn btn-info" title="Регистрация" data-placement="bottom">
                     <i class="far fa-address-card"></i>
                 </a>
             </form>
@@ -117,6 +117,7 @@
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
+            $('[data-tooltip="tooltip"]').tooltip();
         });
     </script>
 </body>
