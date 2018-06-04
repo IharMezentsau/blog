@@ -87,10 +87,12 @@
                             <input type="text" class="form-control" placeholder="Введите Имя" value="">
                         </div>
                         <div class="form-group">
-                            <input type="password" id="passwordReg" class="form-control" placeholder="Введите пароль *" value="">
+                            <input type="password" id="passwordReg" class="form-control" placeholder="Введите пароль *" value=""
+                                   onchange="checkPassword()">
                         </div>
                         <div class="form-group">
-                            <input type="password" id="validPasswordReg" class="form-control" placeholder="Подтвердите пароль *" value="">
+                            <input type="password" id="validPasswordReg" class="form-control" placeholder="Подтвердите пароль *" value=""
+                                   onchange="checkPassword()">
                         </div>
 
                         <div class="modal-footer">
@@ -120,5 +122,6 @@
             $('[data-tooltip="tooltip"]').tooltip();
         });
     </script>
+    <script src="js/validationReg.js" type="text/javascript"></script>
 </body>
 </html>
