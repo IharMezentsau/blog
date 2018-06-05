@@ -8,6 +8,8 @@
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
+
 </head>
 <body>
 
@@ -79,7 +81,7 @@
                     <h4 class="modal-title">Регистрация нового пользователя</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="">
+                    <form action="" id="formReg">
                         <div class="form-group">
                             <input type="text" id="eMailReg" class="form-control" placeholder="Введите E-mail *" value="">
                         </div>
@@ -87,12 +89,10 @@
                             <input type="text" class="form-control" placeholder="Введите Имя" value="">
                         </div>
                         <div class="form-group">
-                            <input type="password" id="passwordReg" class="form-control" placeholder="Введите пароль *" value=""
-                                   onchange="checkPassword()">
+                            <input type="password" id="passwordReg" class="form-control" placeholder="Введите пароль *" value="" name="passwordReg">
                         </div>
                         <div class="form-group">
-                            <input type="password" id="validPasswordReg" class="form-control" placeholder="Подтвердите пароль *" value=""
-                                   onchange="checkPassword()">
+                            <input type="password" id="confirmPasswordReg" class="form-control" placeholder="Подтвердите пароль *" value="" name="confirmPasswordReg">
                         </div>
 
                         <div class="modal-footer">
@@ -113,15 +113,45 @@
 
 
 
-
+    <!--<script src="js/validationReg.js" type="text/javascript"></script>-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="js/bootstrap.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+    <script src="js/validator.js"></script>
+
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
             $('[data-tooltip="tooltip"]').tooltip();
         });
     </script>
-    <script src="js/validationReg.js" type="text/javascript"></script>
+
+    <script>
+        // just for the demos, avoids form submit
+        $.tools.validator.localize("fi", {
+            '*'          : 'Virheellinen arvo',
+            ':email'     : 'Virheellinen s&auml;hk&ouml;postiosoite',
+            ':number'    : 'Arvon on oltava numeerinen',
+            ':url'       : 'Virheellinen URL',
+            '[max]'      : 'Arvon on oltava pienempi, kuin $1',
+            '[min]'      : 'Arvon on oltava suurempi, kuin $1',
+            '[required]' : 'Kent&auml;n arvo on annettava'
+        });
+        jQuery.validator.setDefaults({
+            debug: true,
+            success: "valid"
+        });
+        $( "#formReg" ).validate({
+            lang: 'fi',
+            rules: {
+                passwordReg: "required",
+                confirmPasswordReg: {
+                    equalTo: "#passwordReg"
+                }
+            }
+        });
+    </script>
+
 </body>
 </html>

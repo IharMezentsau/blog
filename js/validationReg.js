@@ -3,10 +3,11 @@ function checkPassword() {
     alert("11");
     var stringPassword = document.getElementById("passwordReg");
     var stringConfirmPassword = document.getElementById("validPasswordReg");
-    if ((stringPassword != "") && (stringPassword.length >5) && (stringConfirmPassword != "")){
+    if ((stringPassword != "") && (stringPassword.length > 5) && (stringConfirmPassword != "")) {
 
         alert("11");
-}
+    }
+};
 function enterPassword() {
     var errorMessage;
     var submitKeyMessage;
