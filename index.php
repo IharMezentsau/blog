@@ -12,6 +12,9 @@
 
 </head>
 <body>
+    <?php
+        include_once ('bd.php');
+    ?>
 
     <div class="navbar navbar-inverse navbar-static-top">
         <div class="container">
