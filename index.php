@@ -89,7 +89,7 @@
                             <input type="text" id="eMailReg" class="form-control" placeholder="Введите E-mail *" value="">
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Введите Имя" value="">
+                            <input type="text" class="form-control" id="nameId" placeholder="Введите Имя" value="">
                         </div>
                         <div class="form-group">
                             <input type="password" id="passwordReg" class="form-control" placeholder="Введите пароль *" value="" name="passwordReg">
@@ -99,7 +99,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="button" id="regBtn" class="btn btn-primary">
                                 <i class="fas fa-address-card"></i> Зарегистрироваться
                             </button>
                         </div>
@@ -132,6 +132,7 @@
 
     <script>
         // just for the demos, avoids form submit
+        $("#formReg").validate().cancelSubmit = true;
         $.tools.validator.localize("fi", {
             '*'          : 'Virheellinen arvo',
             ':email'     : 'Virheellinen s&auml;hk&ouml;postiosoite',
@@ -148,6 +149,7 @@
         $( "#formReg" ).validate({
             lang: 'fi',
             rules: {
+
                 passwordReg: "required",
                 confirmPasswordReg: {
                     equalTo: "#passwordReg"
@@ -155,6 +157,7 @@
             }
         });
     </script>
+    <script src="js/validationReg.js"></script>
 
 </body>
 </html>
