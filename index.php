@@ -13,6 +13,7 @@
 </head>
 <body>
     <?php
+        session_start();
         include_once ('bd.php');
     ?>
 
