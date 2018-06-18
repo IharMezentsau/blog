@@ -6,7 +6,10 @@ CREATE TABLE blog_user.t_user(
 	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
     `email` VARCHAR(255) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL UNIQUE,
-    `name` VARCHAR(255) 
+    `name` VARCHAR(255),
+    `date` DATETIME,
+    `validstring` VARCHAR(255) NOT NULL,
+    `validreg` BOOLEAN
     
 );
 

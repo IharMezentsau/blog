@@ -36,6 +36,55 @@
                 else {
                     $login = $_REQUEST["newEMailReg"];
                     $password = $_REQUEST["passwordReg"];
+                    $passwordHash = md5($password);
+                    $date = date("Y/m/d H.i.s");
+
+                    $length = 255;
+                    $chartypes = "all";
+
+
+                    function random_string($length, $chartypes)
+                    {
+                        $chartypes_array=explode(",", $chartypes);
+                        // задаем строки символов.
+                        //Здесь вы можете редактировать наборы символов при необходимости
+                        $lower = 'abcdefghijklmnopqrstuvwxyz'; // lowercase
+                        $upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // uppercase
+                        $numbers = '1234567890'; // numbers
+                        $special = '^@*+-+%()!?'; //special characters
+                        $chars = "";
+                        // определяем на основе полученных параметров,
+                        //из чего будет сгенерирована наша строка.
+                        if (in_array('all', $chartypes_array)) {
+                            $chars = $lower . $upper. $numbers . $special;
+                        } else {
+                            if(in_array('lower', $chartypes_array))
+                                $chars = $lower;
+                            if(in_array('upper', $chartypes_array))
+                                $chars .= $upper;
+                            if(in_array('numbers', $chartypes_array))
+                                $chars .= $numbers;
+                            if(in_array('special', $chartypes_array))
+                                $chars .= $special;
+                        }
+                        // длина строки с символами
+                        $chars_length = strlen($chars) - 1;
+                        // создаем нашу строку,
+                        //извлекаем из строки $chars символ со случайным
+                        //номером от 0 до длины самой строки
+                        $string = $chars{rand(0, $chars_length)};
+                        // генерируем нашу строку
+                        for ($i = 1; $i < $length; $i = strlen($string)) {
+                            // выбираем случайный элемент из строки с допустимыми символами
+                            $random = $chars{rand(0, $chars_length)};
+                            // убеждаемся в том, что два символа не будут идти подряд
+                            if ($random != $string{$i - 1}) $string .= $random;
+                        }
+                        // возвращаем результат
+                        return $string;
+                    };
+
+                    $validString = random_string($length, $chartypes);
 
 
                     $query = ("SELECT email FROM blog_user.t_user WHERE email = '".$login."'");
@@ -47,12 +96,12 @@
                     else {
                         if (isset($_REQUEST["newUserName"])) {
                             $userName = $_REQUEST["newUserName"];
-                            $query = "INSERT INTO blog_user.t_user (email, password, name) VALUES ('" . $login . "','" . $password . "','" . $userName . "')";
+                            $query = "INSERT INTO blog_user.t_user (email, password, name, date, validstring, validreg) VALUES ('" . $login . "','" . $passwordHash . "','" . $userName . "','" . $date . "','" . $validString . "','" . "FALSE" . "')";
                             $result = mysqli_query($link, $query) or die(mysqli_error());
                             echo "SUCCESS";
                         }
                         else {
-                            $query = "INSERT INTO blog_user.t_user (email, password, name) VALUES ('" . $login . "','" . $password . "',')";
+                            $query = "INSERT INTO blog_user.t_user (email, password, date, validstring, validreg) VALUES ('" . $login . "','" . $passwordHash . "','" . $date . "','" . $validString . "','" . "FALSE" . "')";
                             $result = mysqli_query($link, $query) or die(mysqli_error());
                             echo "SUCCESS";
                         }
@@ -60,6 +109,7 @@
 
                 }
             };
+
 
         ?>
     </body>
