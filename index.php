@@ -46,22 +46,13 @@
 
     <script>
         // just for the demos, avoids form submit
-        $("#formReg").validate().cancelSubmit = true;
-        $.tools.validator.localize("fi", {
-            '*'          : 'Virheellinen arvo',
-            ':email'     : 'Virheellinen s&auml;hk&ouml;postiosoite',
-            ':number'    : 'Arvon on oltava numeerinen',
-            ':url'       : 'Virheellinen URL',
-            '[max]'      : 'Arvon on oltava pienempi, kuin $1',
-            '[min]'      : 'Arvon on oltava suurempi, kuin $1',
-            '[required]' : 'Kent&auml;n arvo on annettava'
-        });
+
         jQuery.validator.setDefaults({
             debug: true,
             success: "valid"
         });
         $( "#formReg" ).validate({
-            lang: 'fi',
+
             rules: {
 
                 passwordReg: "required",
