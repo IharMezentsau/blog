@@ -85,12 +85,12 @@
                     <h4 class="modal-title">Регистрация нового пользователя</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="" id="formReg">
+                    <form action="registration.php" id="formReg">
                         <div class="form-group">
-                            <input type="text" id="eMailReg" class="form-control" placeholder="Введите E-mail *" value="">
+                            <input type="text" id="eMailReg" name="newEMailReg" class="form-control" placeholder="Введите E-mail *" value="">
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="nameId" placeholder="Введите Имя" value="">
+                            <input type="text" class="form-control" name="newUserName" id="nameId" placeholder="Введите Имя" value="">
                         </div>
                         <div class="form-group">
                             <input type="password" id="passwordReg" class="form-control" placeholder="Введите пароль *" value="" name="passwordReg">
@@ -100,7 +100,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" id="regBtn" class="btn btn-primary">
+                            <button type="submit" id="regBtn" value="submit" name="submit" class="btn btn-primary">
                                 <i class="fas fa-address-card"></i> Зарегистрироваться
                             </button>
                         </div>
@@ -122,6 +122,7 @@
     <script src="js/bootstrap.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
     <script src="js/validator.js"></script>
 
     <script>
