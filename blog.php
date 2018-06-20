@@ -1,16 +1,19 @@
 <?php
 
     $dateMessage = date("Y/m/d H.i.s");
+    $iSpoiler = 1;
 
-    if (isset($_REQUEST['newMessage'])){
+    if (isset($_REQUEST['newMessage']) && ($_REQUEST['newMessage'] != "")){
         $querySendMessage = 'INSERT INTO t_message(`date`, `user_id`, `message`) VALUES ("' . $dateMessage .
-            '",' . $_SESSION['user_id'] . ',"' . $_REQUEST['newMessage'] . '")';
+            '",' . $_SESSION['user_id'] . ',"' . $_REQUEST['newMessage'] . '");';
         $addMessage = mysqli_query($link, $querySendMessage);
     };
 
-    if (isset($_REQUEST['newAnswer'])){
-        $addAnswer = mysqli_query($link, 'INSERT INTO t_answer_message(date, user_id, message_id, answer) VALUES ("' . $dateMessage .
-            '",' . $_SESSION['user_id'] . ',' . $_REQUEST['messageId'] . ',"' . $_REQUEST['newAnswer'] . '")');};
+    if (isset($_REQUEST['newAnswer']) && ($_REQUEST['newAnswer'] != "")){
+        $querySendAnswer = 'INSERT INTO t_answer_message(`date`, `user_id`, `message_id`, `answer`) VALUES ("' . $dateMessage .
+            '",' . $_SESSION['user_id'] . ',' . $_SESSION['message_id'] . ',"' . $_REQUEST['newAnswer'] . '");';
+        $addAnswer = mysqli_query($link, $querySendAnswer);
+    };
 
     $resultMessage = mysqli_query($link, 'SELECT t_message.id AS id_message,
                                                 t_message.message AS message, 
@@ -47,8 +50,8 @@
                                     <h5>' . $row['date_message'] . '</h5>' .
                                 '</div>
                             </div>
-                            <a href="#spoiler-1" data-toggle="collapse" class="btn btn-primary collapsed spoiler">Ответ</a>
-                            <div class="collapse" id="spoiler-1">
+                            <a href="#spoiler-' . $iSpoiler . '" data-toggle="collapse" class="btn btn-primary collapsed spoiler">Ответ</a>
+                            <div class="collapse" id="spoiler-' . $iSpoiler++ . '">
                                 <div class="well">';
             while ($row = mysqli_fetch_assoc($resultAnswer)){
                             echo '<div class="container masonry" data-columns>
