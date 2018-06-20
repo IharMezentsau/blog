@@ -1,4 +1,4 @@
-    $("#").click(function(e) {
+    $(".").click(function(e) {
         e.preventDefault();
         var dataEMail = $("#eMailReg").val();
         var dataNameId = $("#nameId").val();

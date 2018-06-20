@@ -6,7 +6,7 @@
                 <h4 class="modal-title">Регистрация нового пользователя</h4>
             </div>
             <div class="modal-body">
-                <form action="registration.php" id="formReg">
+                <form action="registration.php" id="formReg" method="post">
                     <div class="form-group">
                         <input type="text" id="eMailReg" name="newEMailReg" class="form-control" placeholder="Введите E-mail *" value="">
                     </div>

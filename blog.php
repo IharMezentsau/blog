@@ -1,5 +1,15 @@
 <?php
 
+    $dateMessage = date("Y/m/d H.i.s");
+
+    if (isset($_REQUEST['newMessage'])){
+        $addMessage = mysqli_query($link, 'INSERT INTO blog_user.t_message(date, user_id, message) VALUES (' . $dateMessage .
+            ',' . $_SESSION['user_id'] . ',' . $_REQUEST['newMessage'] . ')');};
+
+    if (isset($_REQUEST['newAnswer'])){
+        $addAnswer = mysqli_query($link, 'INSERT INTO blog_user.t_answer_message(date, user_id, message_id, answer) VALUES (' . $dateMessage .
+            ',' . $_SESSION['user_id'] . ',' . $_REQUEST['messageId'] . $_REQUEST['newAnswer'] . ')');};
+
     $resultMessage = mysqli_query($link, 'SELECT * FROM blog_user.t_message INNER JOIN 
                                                 blog_user.t_user ON blog_user.t_message.user_id = blog_user.t_user.id
                                                 ORDER BY blog_user.t_message.id ASC;');
@@ -91,4 +101,21 @@
     //    </div>
   //  </div>
 //</div>
-            ?>
+?>
+<?php
+
+if (isset($_SESSION['user_id'])) {
+   echo '
+        <div class="navbar navbar-inverse navbar-static-bottom">
+            <div class="container">
+                <form action="index.php" name="sendMessage" class="navbar-form navbar-center" method="post">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="newMessage" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-share-square"></i>
+                    </button>    
+                </form>
+            </div>
+        </div>';};
+?>

@@ -62,7 +62,7 @@
             }
         });
     </script>
-    <script src="js/validationReg.js"></script>
+    <!--<script src="js/validationReg.js"></script>-->
 
 </body>
 </html>

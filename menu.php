@@ -49,14 +49,16 @@
 
                     if (isset($_SESSION['user_id'])) {
                         echo    '<div class="form-group">
-                                    <input name="submit" class="form-control" type="submit" value="logOut">
+                                    <button name="submit" class="form-control btn btn-primary" type="submit" value="logOut">
+                                        <i class="fas fa-door-closed"></i> ВЫЙТИ
+                                    </button>
                                 </div>
                                 <div class="form-group">
                                     <input name="authorisation" class="form-control" type="hidden" value="logout">
                                 </div>';
                     }
                     else {
-                        die('   <div class="form-group">
+                        echo '   <div class="form-group">
                                     <input type="text" class="form-control" name="userName" placeholder="E-mail" value="">
                                 </div>
                                 <div class="form-group">
@@ -68,8 +70,9 @@
                                 <button type="button" data-toggle="modal" data-tooltip="tooltip" data-target="#registration"
                                         class="btn btn-info" title="Регистрация" data-placement="bottom">
                                     <i class="far fa-address-card"></i>
-                                </button>');
+                                </button>';
                     };
+
                 ?>
 
             </form>
@@ -79,3 +82,5 @@
         </div>
 
     </div>
+
+

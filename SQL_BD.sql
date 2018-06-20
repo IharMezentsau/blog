@@ -38,5 +38,5 @@ CREATE TABLE blog_user.t_answer_message (
 );
 
 SELECT * FROM blog_user.t_user;
-UPDATE blog_user.t_user SET validreg = 1 WHERE id = TRUE;
+
 SELECT * FROM blog_user.t_user;
