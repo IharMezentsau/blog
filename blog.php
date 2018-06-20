@@ -22,15 +22,6 @@
                                                 t_user ON t_message.user_id = t_user.id
                                                 ORDER BY t_message.id ASC;');
 
-    $resultAnswer = mysqli_query($link, 'SELECT t_answer_message.id AS id_answer,
-                                                t_answer_message.answer AS answer,
-                                                t_user.name AS user_name_answer,
-                                                t_answer_message.date AS date_answer
-                                                FROM t_answer_message INNER JOIN 
-                                                t_user ON t_answer_message.user_id = t_user.id
-                                                INNER JOIN t_message ON 
-                                                t_answer_message.message_id = t_message.id
-                                                ORDER BY t_answer_message.id ASC;');
 
     while ($row = mysqli_fetch_assoc($resultMessage)){
         echo '<div class="container masonry" data-columns>
@@ -55,7 +46,21 @@
 
         $message_id = $row['id_message'];
 
+        $quaryResultAnswer = 'SELECT t_answer_message.id AS id_answer,
+                                                t_answer_message.answer AS answer,
+                                                t_user.name AS user_name_answer,
+                                                t_answer_message.date AS date_answer
+                                                FROM t_answer_message INNER JOIN 
+                                                t_user ON t_answer_message.user_id = t_user.id
+                                                INNER JOIN t_message ON 
+                                                t_answer_message.message_id = t_message.id 
+                                                WHERE t_answer_message.message_id = ' . $message_id . '
+                                                ORDER BY t_answer_message.id ASC;';
+        $resultAnswer = mysqli_query($link, $quaryResultAnswer);
+
         while ($row = mysqli_fetch_assoc($resultAnswer)){
+
+
             echo                    '<div class="container masonry" data-columns>
                                         <div class="item">
                                             <div class="thumbnail">
