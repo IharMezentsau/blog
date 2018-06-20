@@ -1,7 +1,6 @@
 <?php
 
     $dateMessage = date("Y/m/d H.i.s");
-    $iSpoiler = 1;
 
     if (isset($_REQUEST['newMessage']) && ($_REQUEST['newMessage'] != "")){
         $querySendMessage = 'INSERT INTO t_message(`date`, `user_id`, `message`) VALUES ("' . $dateMessage .
@@ -50,8 +49,8 @@
                                     <h5>' . $row['date_message'] . '</h5>' .
                                 '</div>
                             </div>
-                            <a href="#spoiler-' . $iSpoiler . '" data-toggle="collapse" class="btn btn-primary collapsed spoiler">Ответ</a>
-                            <div class="collapse" id="spoiler-' . $iSpoiler++ . '">
+                            <a href="#spoiler-' . $row['id_message'] . '" data-toggle="collapse" class="btn btn-primary collapsed spoiler">Ответ</a>
+                            <div class="collapse" id="spoiler-' . $row['id_message'] . '">
                                 <div class="well">';
             while ($row = mysqli_fetch_assoc($resultAnswer)){
                             echo '<div class="container masonry" data-columns>
