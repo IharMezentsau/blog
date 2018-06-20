@@ -2,13 +2,13 @@
     if (isset($_POST['userName']) && isset($_POST['userPassword']))
     {
         $login = mysqli_real_escape_string($link, $_POST['userName']);
-        $password = ($_POST['userPassword']);
+        $password = md5($_POST['userPassword']);
 
         // делаем запрос к БД
         // и ищем юзера с таким логином и паролем
 
         $query = "SELECT *
-                FROM blog_user.t_user
+                FROM t_user
                 WHERE `email`='". $login ."' AND `password`='". $password ."'
                 LIMIT 1";
         $sql = mysqli_query($link, $query) or trigger_error(mysqli_error().$query);

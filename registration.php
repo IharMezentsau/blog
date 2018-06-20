@@ -87,7 +87,7 @@
                     $validString = random_string($length, $chartypes);
 
 
-                    $query = ("SELECT email FROM blog_user.t_user WHERE email = '".$login."'");
+                    $query = ("SELECT email FROM t_user WHERE email = '".$login."'");
                     $sql = mysqli_query($link ,$query) or die (mysqli_error());
 
                     if (mysqli_num_rows($sql) > 0){
@@ -96,12 +96,12 @@
                     else {
                         if (isset($_REQUEST["newUserName"])) {
                             $userName = $_REQUEST["newUserName"];
-                            $query = "INSERT INTO blog_user.t_user (email, password, name, date, validstring, validreg) VALUES ('" . $login . "','" . $passwordHash . "','" . $userName . "','" . $date . "','" . $validString . "','" . "FALSE" . "')";
+                            $query = "INSERT INTO t_user (email, password, name, date, validstring, validreg) VALUES ('" . $login . "','" . $passwordHash . "','" . $userName . "','" . $date . "','" . $validString . "','" . "FALSE" . "')";
                             $result = mysqli_query($link, $query) or die(mysqli_error());
                             echo "SUCCESS";
                         }
                         else {
-                            $query = "INSERT INTO blog_user.t_user (email, password, date, validstring, validreg) VALUES ('" . $login . "','" . $passwordHash . "','" . $date . "','" . $validString . "','" . "FALSE" . "')";
+                            $query = "INSERT INTO t_user (email, password, date, validstring, validreg) VALUES ('" . $login . "','" . $passwordHash . "','" . $date . "','" . $validString . "','" . "FALSE" . "')";
                             $result = mysqli_query($link, $query) or die(mysqli_error());
                             echo "SUCCESS";
                         }

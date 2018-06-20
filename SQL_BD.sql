@@ -37,6 +37,3 @@ CREATE TABLE blog_user.t_answer_message (
     
 );
 
-SELECT * FROM blog_user.t_user;
-
-SELECT * FROM blog_user.t_user;

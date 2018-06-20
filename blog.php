@@ -3,72 +3,82 @@
     $dateMessage = date("Y/m/d H.i.s");
 
     if (isset($_REQUEST['newMessage'])){
-        $addMessage = mysqli_query($link, 'INSERT INTO blog_user.t_message(date, user_id, message) VALUES (' . $dateMessage .
-            ',' . $_SESSION['user_id'] . ',' . $_REQUEST['newMessage'] . ')');};
+        $querySendMessage = 'INSERT INTO t_message(`date`, `user_id`, `message`) VALUES ("' . $dateMessage .
+            '",' . $_SESSION['user_id'] . ',"' . $_REQUEST['newMessage'] . '")';
+        $addMessage = mysqli_query($link, $querySendMessage);
+    };
 
     if (isset($_REQUEST['newAnswer'])){
-        $addAnswer = mysqli_query($link, 'INSERT INTO blog_user.t_answer_message(date, user_id, message_id, answer) VALUES (' . $dateMessage .
-            ',' . $_SESSION['user_id'] . ',' . $_REQUEST['messageId'] . $_REQUEST['newAnswer'] . ')');};
+        $addAnswer = mysqli_query($link, 'INSERT INTO t_answer_message(date, user_id, message_id, answer) VALUES ("' . $dateMessage .
+            '",' . $_SESSION['user_id'] . ',' . $_REQUEST['messageId'] . ',"' . $_REQUEST['newAnswer'] . '")');};
 
-    $resultMessage = mysqli_query($link, 'SELECT * FROM blog_user.t_message INNER JOIN 
-                                                blog_user.t_user ON blog_user.t_message.user_id = blog_user.t_user.id
-                                                ORDER BY blog_user.t_message.id ASC;');
+    $resultMessage = mysqli_query($link, 'SELECT t_message.id AS id_message,
+                                                t_message.message AS message, 
+                                                t_user.name AS user_name_message,
+                                                t_message.date AS date_message
+                                                FROM t_message INNER JOIN 
+                                                t_user ON t_message.user_id = t_user.id
+                                                ORDER BY t_message.id ASC;');
 
-    $resultAnswer = mysqli_query($link, 'SELECT * FROM blog_user.t_answer_message INNER JOIN 
-                                                blog_user.t_user ON blog_user.t_answer_message.user_id = blog_user.t_user.id
-                                                INNER JOIN blog_user.t_message ON 
-                                                blog_user.t_answer_message.message_id = blog_user.t_message.id
-                                                ORDER BY blog_user.t_answer_message.id ASC;');
+    $resultAnswer = mysqli_query($link, 'SELECT t_answer_message.id AS id_answer,
+                                                t_answer_message.answer AS answer,
+                                                t_user.name AS user_name_answer,
+                                                t_answer_message.date AS date_answer
+                                                FROM t_answer_message INNER JOIN 
+                                                t_user ON t_answer_message.user_id = t_user.id
+                                                INNER JOIN t_message ON 
+                                                t_answer_message.message_id = t_message.id
+                                                ORDER BY t_answer_message.id ASC;');
 
     while ($row = mysqli_fetch_assoc($resultMessage)){
-    echo '<div class="container masonry" data-columns>
-            <div class="item">
-                <div class="thumbnail">
-                    <div class="caption">
-                        <p>' . $row['blog_user.t_message.message'] . '</p>' .
-                        '<div class="container">
-                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                <h5>' . $row['blog_user.t_user.name'] . '</h5>' .
-                            '</div>
-                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-
+        echo '<div class="container masonry" data-columns>
+                <div class="item">
+                    <div class="thumbnail">
+                        <div class="caption">
+                            <p>' . $row['message'] . '</p>' .
+                            '<div class="container">
+                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                    <h5>' . $row['user_name_message'] . '</h5>' .
+                                '</div>
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+    
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                    <h5>' . $row['date_message'] . '</h5>' .
+                                '</div>
                             </div>
-                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                <h5>' . $row['blog_user.t_message.date'] . '</h5>' .
-                            '</div>
-                        </div>
-                        <a href="#spoiler-1" data-toggle="collapse" class="btn btn-primary collapsed spoiler">Ответ</a>
-                        <div class="collapse" id="spoiler-1">
-                            <div class="well">';
-        while ($row = mysqli_fetch_assoc($resultAnswer)){
-                        echo '<div class="container masonry" data-columns>
-                                <div class="item">
-                                    <div class="thumbnail">
-                                        <div class="caption">
-                                            <p>' . $row['blog_user.t_answer_message.answer'] . '</p>' .
-                                            '<div class="container">
-                                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                                    <h5>' . $row['blog_user.t_user.name'] . '</h5>' .
-                                                '</div>
-                                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                    
+                            <a href="#spoiler-1" data-toggle="collapse" class="btn btn-primary collapsed spoiler">Ответ</a>
+                            <div class="collapse" id="spoiler-1">
+                                <div class="well">';
+            while ($row = mysqli_fetch_assoc($resultAnswer)){
+                            echo '<div class="container masonry" data-columns>
+                                    <div class="item">
+                                        <div class="thumbnail">
+                                            <div class="caption">
+                                                <p>' . $row['answer'] . '</p>' .
+                                                '<div class="container">
+                                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                                        <h5>' . $row['user_name_answer'] . '</h5>' .
+                                                    '</div>
+                                                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                        
+                                                    </div>
+                                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                                        <h5>' . $row['date_answer'] . '</h5>' .
+                                                    '</div>
                                                 </div>
-                                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                                    <h5>' . $row['blog_user.t_answer_message.date'] . '</h5>' .
-                                                '</div>
+                                        
                                             </div>
-                                    
                                         </div>
                                     </div>
+                                </div>';};
+        echo '
                                 </div>
-                            </div>';};
-    echo '
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>';};
+            </div>';};
 
 
 //<div class="container masonry" data-columns>
