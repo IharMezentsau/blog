@@ -1,12 +1,14 @@
 <?php
 
     $resultMessage = mysqli_query($link, 'SELECT * FROM blog_user.t_message INNER JOIN 
-                                                blog_user.t_user ON blog_user.t_message.user_id = blog_user.t_user.id;');
+                                                blog_user.t_user ON blog_user.t_message.user_id = blog_user.t_user.id
+                                                ORDER BY blog_user.t_message.id ASC;');
 
     $resultAnswer = mysqli_query($link, 'SELECT * FROM blog_user.t_answer_message INNER JOIN 
                                                 blog_user.t_user ON blog_user.t_answer_message.user_id = blog_user.t_user.id
                                                 INNER JOIN blog_user.t_message ON 
-                                                blog_user.t_answer_message.message_id = blog_user.t_message.id;');
+                                                blog_user.t_answer_message.message_id = blog_user.t_message.id
+                                                ORDER BY blog_user.t_answer_message.id ASC;');
 
     while ($row = mysqli_fetch_assoc($resultMessage)){
     echo '<div class="container masonry" data-columns>
