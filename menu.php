@@ -33,11 +33,16 @@
     <div class="navbar navbar-inverse navbar-static-top">
         <div class="container">
             <div class="navbar-header">
-
                 <a class="navbar-brand" href="#">Б</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responsive-menu">
+                    <span class="sr-only">Открыть меню</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
             </div>
 
-            <form action="index.php" name="authorisation" class="navbar-form navbar-right" method="post">
+            <form action="index.php" name="authorisation" class="navbar-form navbar-right collapse navbar-collapse" id="responsive-menu" method="post">
 
                 <?php
                     if (isset($_POST['authorisation']) && ($_POST['authorisation'] == 'logout')){
@@ -58,29 +63,52 @@
                                 </div>';
                     }
                     else {
-                        echo '   <div class="form-group">
-                                    <input type="text" class="form-control" name="userName" placeholder="E-mail" value="">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control" name="userPassword" placeholder="Пароль" value="">
-                                </div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-sign-in-alt"></i> ВОЙТИ
-                                </button>
-                                <button type="button" data-toggle="modal" data-tooltip="tooltip" data-target="#registration"
-                                        class="btn btn-info" title="Регистрация" data-placement="bottom">
-                                    <i class="far fa-address-card"></i>
-                                </button>';
+                        echo '  
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="userName" placeholder="E-mail" value="">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control" name="userPassword" placeholder="Пароль" value="">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-sign-in-alt"></i> ВОЙТИ
+                                    </button>
+                                    <button type="button" data-toggle="modal" data-tooltip="tooltip" data-target="#registration"
+                                            class="btn btn-info" title="Регистрация" data-placement="bottom">
+                                        <i class="far fa-address-card"></i>
+                                    </button>';
                     };
 
                 ?>
 
             </form>
 
-
-
         </div>
 
     </div>
 
 
+<!--<div class="container">
+    <div class="row">
+        <div class="navbar navbar-inverse">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responsive-menu">
+                        <span class="sr-only">Открыть меню</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="responsive-menu">
+                    <ul class="nav navbar-nav">
+                        <li> <a href="">1</a> </li>
+                        <li> <a href="">1</a> </li>
+                        <li> <a href="">1</a> </li>
+                        <li> <a href="">1</a> </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
