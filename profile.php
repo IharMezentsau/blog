@@ -34,27 +34,48 @@
                 $dateAva = date("Y_m_d_H_i_s");
                 $fileExtension = pathinfo($_FILES['avatarAcc']['name'], PATHINFO_EXTENSION);
                 $nameAva = $_SESSION['user_id'] . $dateAva . "." . $fileExtension;
-
-                // Проверяем тип файла
-                if (!in_array($_FILES['avatarAcc']['type'], $types)) {
-                    die('Запрещённый тип файла. <a href="?">Попробовать другой файл?</a>');
+                if (is_uploaded_file($_FILES['avatarAcc']['tmp_name'])) {
+                    // Проверяем тип файла
+                    if (!in_array($_FILES['avatarAcc']['type'], $types)) {
+                        die('Запрещённый тип файла. <a href="?">Попробовать другой файл?</a>');
+                    };
+                    // Проверяем размер файла
+                    if ($_FILES['avatarAcc']['size'] > $size) {
+                        die('Слишком большой размер файла. <a href="?">Попробовать другой файл?</a>');
+                    };
+                    // Загрузка файла и вывод сообщения
+                    if (!@copy($_FILES['avatarAcc']['tmp_name'], $path . $nameAva)) {
+                        echo 'Что-то пошло не так';
+                    } else {
+                        echo 'Загрузка удачна <a href="' . $path . $nameAva . '">Посмотреть</a> ';
+                        $queryAccauntImg = "UPDATE t_user SET
+                                            avatar = '" . $path . $nameAva . "'
+                                WHERE `id`=" . $_SESSION['user_id'] . "
+                                LIMIT 1";
+                        $accaunt = mysqli_query($link, $queryAccauntImg) or trigger_error(mysqli_error() . $queryAccauntImg);
+                    };
                 };
-                // Проверяем размер файла
-                if ($_FILES['avatarAcc']['size'] > $size) {
-                    die('Слишком большой размер файла. <a href="?">Попробовать другой файл?</a>');
+                if (($_REQUEST['userName']) != "") {
+                    $queryAccaunt = "UPDATE t_user SET
+                                            name = '" . $_REQUEST['userName'] . "'
+                                WHERE `id`=" . $_SESSION['user_id'] . "
+                                LIMIT 1";
+                    $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error() . $queryAccaunt);
                 };
-                // Загрузка файла и вывод сообщения
-                if (!@copy($_FILES['avatarAcc']['tmp_name'], $path . $nameAva)) {
-                    echo 'Что-то пошло не так';
-                } else {
-                    echo 'Загрузка удачна <a href="' . $path . $nameAva . '">Посмотреть</a> ';
-                    $queryAccauntImg = "UPDATE t_user SET
-                                        avatar = '" . $path . $nameAva . "'
-                            WHERE `id`=". $_SESSION['user_id'] ."
-                            LIMIT 1";
-                    $accaunt = mysqli_query($link, $queryAccauntImg) or trigger_error(mysqli_error().$queryAccauntImg);
+                if (($_REQUEST['familyName']) != "") {
+                    $queryAccaunt = "UPDATE t_user SET
+                                            familyname = '" . $_REQUEST['familyName'] . "'
+                                WHERE `id`=" . $_SESSION['user_id'] . "
+                                LIMIT 1";
+                    $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error() . $queryAccaunt);
                 };
-
+                if (($_POST['gender']) != "") {
+                    $queryAccaunt = "UPDATE t_user SET
+                                            sex = '" . $_REQUEST['gender'] . "'
+                                WHERE `id`=" . $_SESSION['user_id'] . "
+                                LIMIT 1";
+                    $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error() . $queryAccaunt);
+                };
 
 
             };
@@ -80,16 +101,45 @@
                     };
                     echo                                            '" alt="" class="img-circle img-responsive">
                                     <form enctype="multipart/form-data"  method="post" action="profile.php">
-                                        Аватар: <input type="file" name="avatarAcc" accept="image/*" title="Выбрать аватар">
+                                        <div class="form-group">
+                                            Аватар: <input type="file" name="avatarAcc" accept="image/*" title="Выбрать аватар">
+                                        </div>    
+                                        <br/>
+                                        <div class="form-group">
+                                            eMail: <h5>' . $row['email'] . '</h5>
+                                        </div>
+                                        <div class="form-group">
+                                            Дата регистрации: <h5>' . $row['date'] . '</h5>
+                                        </div>        
+                                        <div class="form-group">      
+                                            Имя:    <input type="text" class="form-control" name="userName" placeholder="' . $row['name'] . '" value="">     
+                                        </div>
+                                        <div class="form-group">      
+                                            Фамилия:    <input type="text" class="form-control" name="familyName" placeholder="' . $row['familyname'] . '" value="">     
+                                        </div>
+                                        <div class="form-group">
+                                            Пол:    
+                                                    <select name="gender" class="form-control" size="3">';
+                    $options = array( 'U'=>'Скрыт', 'M'=>'Мужской', 'F'=>'Женский');
+                    foreach($options as $value=>$name) {
+                        if($value == $row['sex']) {
+                            echo                        '<option selected value="' . $value . '">' . $name . '</option>';
+                        }
+                        else {
+                            echo                        '<option value="' . $value . '">' . $name . '</option>';
+                        };
+                    };
+                                                        
+
+                    //                                    <option value="U">Скрыт</option>
+                      //                                  <option value="M">Мужской</option>
+                        //                                <option value="F">Женский</option>
+                    echo                             '</select>   
+                                        </div>    
                                         <button type="submit" name="editProfile"  class="btn btn-primary">
-                                            <i class="fas fa-file-upload"></i> Загрузить аватар
+                                            <i class="fas fa-file-upload"></i> Обновить данные
                                         </button>
                                     </form>
-                                    <div class="caption">
-                                        <h3><a href="#">Название нашего поста</a></h3>
-                                        <p>Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren </p>
-                                        <a href="#" class="btn btn-success">Подробнее <i class="fas fa-arrow-right"></i></a>
-                                    </div>
                                 </div>
                             </div>
                 
