@@ -1,7 +1,7 @@
     <div class="navbar navbar-inverse navbar-static-top">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Б</a>
+                <a class="navbar-brand" href="index.php">Б</a>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responsive-menu">
                     <span class="sr-only">Открыть меню</span>
                     <span class="icon-bar"></span>
