@@ -11,3 +11,7 @@ a.spoiler.collapsed:after{
     font-family: 'Font Awesome 5 Free';
 }
 
+img.img-responsive{
+    width: 480px;
+    height: 320px;
+}

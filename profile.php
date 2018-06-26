@@ -30,7 +30,7 @@
 
 
             // Обработка запроса
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (isset($_REQUEST['editProfile'])) {
                 $dateAva = date("Y_m_d_H_i_s");
                 $fileExtension = pathinfo($_FILES['avatarAcc']['name'], PATHINFO_EXTENSION);
                 $nameAva = $_SESSION['user_id'] . $dateAva . "." . $fileExtension;
@@ -48,28 +48,16 @@
                     echo 'Что-то пошло не так';
                 } else {
                     echo 'Загрузка удачна <a href="' . $path . $nameAva . '">Посмотреть</a> ';
-                };
-            };
-            /*if (isset($_GET['formProfile'])) {
-                echo '<script>alert();</script>';
-                $uploaddir = '/img/ava';
-                $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
-                //$uploadfileExtension = pathinfo($uploadfile, PATHINFO_EXTENSION);
-
-
-                echo '<pre>';
-                if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-                    $queryAccauntImg = "INSERT INTO t_user( avatar )
-                                        VALUE ('" . $randomImgNameString . "." . $uploadfileExtension . "')
-                            WHERE `id`='". $_SESSION['user_id'] ."'
+                    $queryAccauntImg = "UPDATE t_user SET
+                                        avatar = '" . $path . $nameAva . "'
+                            WHERE `id`=". $_SESSION['user_id'] ."
                             LIMIT 1";
-                    $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error().$queryAccaunt);;
+                    $accaunt = mysqli_query($link, $queryAccauntImg) or trigger_error(mysqli_error().$queryAccauntImg);
                 };
 
-                if (isset($_REQUEST['avatarAcc'])){
 
-                };
-            };*/
+
+            };
 
             $queryAccaunt = "SELECT email, password, name, familyname, date, avatar, sex
                             FROM t_user
@@ -83,17 +71,17 @@
                                 <div class="thumbnail">
                                     <img src="';
                     if ($row['avatar'] != null) {
-                        $row['avatar'];
+                        echo $row['avatar'];
                     }
                     else {
                         if ($row['sex'] == 'M') {echo 'img/male.jpg';}
                         elseif ($row['sex'] == 'F') {echo 'img/female.jpg';}
                         elseif ($row['sex'] == 'U') {echo 'img/unknow.jpg';};
                     };
-                    echo                                            '" alt="" class="img-circle">
+                    echo                                            '" alt="" class="img-circle img-responsive">
                                     <form enctype="multipart/form-data"  method="post" action="profile.php">
                                         Аватар: <input type="file" name="avatarAcc" accept="image/*" title="Выбрать аватар">
-                                        <button type="submit" name="formProfile" class="btn btn-primary">
+                                        <button type="submit" name="editProfile"  class="btn btn-primary">
                                             <i class="fas fa-file-upload"></i> Загрузить аватар
                                         </button>
                                     </form>
