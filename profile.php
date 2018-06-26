@@ -18,34 +18,95 @@
         <?php
             session_start();
             include_once ('bd.php');
-        ?>
-
-        <?php
             include_once ('menu.php');
-        ?>
 
-        <div class="container">
-            <div class="item">
-                <div class="thumbnail">
-                    <img src="http://placehold.it/600x240" alt="" class="img-responsive">
-                    <form enctype="multipart/form-data" method="post" action="putimage.php">
-                        Аватар: <input type="file" name="image" />
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-file-upload"></i> Загрузить аватар
-                        </button>
-                    </form>
-                    <div class="caption">
-                        <h3><a href="#">Название нашего поста</a></h3>
-                        <p>Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren </p>
-                        <a href="#" class="btn btn-success">Подробнее <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
+            // Пути загрузки файлов
+            $path = 'img/ava/';
+            $tmp_path = 'tmp/';
+            // Массив допустимых значений типа файла
+            $types = array('image/gif', 'image/png', 'image/jpeg', 'image/jpg');
+            // Максимальный размер файла
+            $size = 10240000;
 
-        </div>
 
-        <?php
+            // Обработка запроса
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $dateAva = date("Y_m_d_H_i_s");
+                $fileExtension = pathinfo($_FILES['avatarAcc']['name'], PATHINFO_EXTENSION);
+                $nameAva = $_SESSION['user_id'] . $dateAva . "." . $fileExtension;
 
+                // Проверяем тип файла
+                if (!in_array($_FILES['avatarAcc']['type'], $types)) {
+                    die('Запрещённый тип файла. <a href="?">Попробовать другой файл?</a>');
+                };
+                // Проверяем размер файла
+                if ($_FILES['avatarAcc']['size'] > $size) {
+                    die('Слишком большой размер файла. <a href="?">Попробовать другой файл?</a>');
+                };
+                // Загрузка файла и вывод сообщения
+                if (!@copy($_FILES['avatarAcc']['tmp_name'], $path . $nameAva)) {
+                    echo 'Что-то пошло не так';
+                } else {
+                    echo 'Загрузка удачна <a href="' . $path . $nameAva . '">Посмотреть</a> ';
+                };
+            };
+            /*if (isset($_GET['formProfile'])) {
+                echo '<script>alert();</script>';
+                $uploaddir = '/img/ava';
+                $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
+                //$uploadfileExtension = pathinfo($uploadfile, PATHINFO_EXTENSION);
+
+
+                echo '<pre>';
+                if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
+                    $queryAccauntImg = "INSERT INTO t_user( avatar )
+                                        VALUE ('" . $randomImgNameString . "." . $uploadfileExtension . "')
+                            WHERE `id`='". $_SESSION['user_id'] ."'
+                            LIMIT 1";
+                    $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error().$queryAccaunt);;
+                };
+
+                if (isset($_REQUEST['avatarAcc'])){
+
+                };
+            };*/
+
+            $queryAccaunt = "SELECT email, password, name, familyname, date, avatar, sex
+                            FROM t_user
+                            WHERE `id`='". $_SESSION['user_id'] ."'
+                            LIMIT 1";
+            $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error().$queryAccaunt);
+
+            while ($row = mysqli_fetch_assoc($accaunt)) {
+                    echo '<div class="container">
+                            <div class="item">
+                                <div class="thumbnail">
+                                    <img src="';
+                    if ($row['avatar'] != null) {
+                        $row['avatar'];
+                    }
+                    else {
+                        if ($row['sex'] == 'M') {echo 'img/male.jpg';}
+                        elseif ($row['sex'] == 'F') {echo 'img/female.jpg';}
+                        elseif ($row['sex'] == 'U') {echo 'img/unknow.jpg';};
+                    };
+                    echo                                            '" alt="" class="img-circle">
+                                    <form enctype="multipart/form-data"  method="post" action="profile.php">
+                                        Аватар: <input type="file" name="avatarAcc" accept="image/*" title="Выбрать аватар">
+                                        <button type="submit" name="formProfile" class="btn btn-primary">
+                                            <i class="fas fa-file-upload"></i> Загрузить аватар
+                                        </button>
+                                    </form>
+                                    <div class="caption">
+                                        <h3><a href="#">Название нашего поста</a></h3>
+                                        <p>Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren Loren </p>
+                                        <a href="#" class="btn btn-success">Подробнее <i class="fas fa-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                
+                        </div>';
+            };
         ?>
 
 
@@ -57,12 +118,15 @@
         <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
         <script src="js/validator.js"></script>
+        <script src="http://gregpike.net/demos/bootstrap-file-input/bootstrap.file-input.js"></script>
 
         <script>
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip();
                 $('[data-tooltip="tooltip"]').tooltip();
             });
+            $('input[type=file]').bootstrapFileInput();
+            $('.file-inputs').bootstrapFileInput();
         </script>
 
         <script>

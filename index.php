@@ -18,7 +18,7 @@
     <?php
         session_start();
         include_once ('bd.php');
-        include_once ('validReg.php');
+        include_once ('validAuth.php');
         include_once ('menu.php');
         include_once ('blog.php');
         include_once ('regForm.php');

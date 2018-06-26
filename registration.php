@@ -96,12 +96,16 @@
                     else {
                         if (isset($_REQUEST["newUserName"])) {
                             $userName = $_REQUEST["newUserName"];
-                            $query = "INSERT INTO t_user (email, password, name, date, validstring, validreg) VALUES ('" . $login . "','" . $passwordHash . "','" . $userName . "','" . $date . "','" . $validString . "','" . "FALSE" . "')";
+                            $query = "INSERT INTO t_user (email, password, name, date, validstring, validreg, sex) 
+                                      VALUES ('" . $login . "','" . $passwordHash . "','" . $userName . "','" . $date .
+                                                "','" . $validString . "','" . "FALSE" . "', 'U')";
                             $result = mysqli_query($link, $query) or die(mysqli_error());
                             echo "SUCCESS";
                         }
                         else {
-                            $query = "INSERT INTO t_user (email, password, date, validstring, validreg) VALUES ('" . $login . "','" . $passwordHash . "','" . $date . "','" . $validString . "','" . "FALSE" . "')";
+                            $query = "INSERT INTO t_user (email, password, date, validstring, validreg, sex) 
+                                      VALUES ('" . $login . "','" . $passwordHash . "','" . $date . "','" .
+                                                    $validString . "','" . "FALSE" . "', 'U')";
                             $result = mysqli_query($link, $query) or die(mysqli_error());
                             echo "SUCCESS";
                         }
