@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <title>Б - Блог</title>
 
     <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
     <link href="css/style.css" rel="stylesheet" type="text/css">
@@ -17,17 +18,9 @@
     <?php
         session_start();
         include_once ('bd.php');
-    ?>
-
-    <?php
+        include_once ('validReg.php');
         include_once ('menu.php');
-    ?>
-
-    <?php
-        include_once ('blog.php')
-    ?>
-
-    <?php
+        include_once ('blog.php');
         include_once ('regForm.php');
     ?>
 
