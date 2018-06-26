@@ -48,6 +48,14 @@
                         echo 'Что-то пошло не так';
                     } else {
                         echo 'Загрузка удачна <a href="' . $path . $nameAva . '">Посмотреть</a> ';
+                        $queryAccaunt = "SELECT avatar
+                            FROM t_user
+                            WHERE `id`='". $_SESSION['user_id'] ."'
+                            LIMIT 1";
+                        $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error().$queryAccaunt);
+                        while ($row = mysqli_fetch_assoc($accaunt)){
+                            unlink($row['avatar']);
+                        };
                         $queryAccauntImg = "UPDATE t_user SET
                                             avatar = '" . $path . $nameAva . "'
                                 WHERE `id`=" . $_SESSION['user_id'] . "
