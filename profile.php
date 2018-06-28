@@ -131,7 +131,7 @@
                         elseif ($row['sex'] == 'F') {echo 'img/female.jpg';}
                         elseif ($row['sex'] == 'U') {echo 'img/unknow.jpg';};
                     };
-                    echo                                            '" alt="" class="img-circle img-responsive">
+                    echo                                            '" alt="" class="img-circle img-responsive img-profile">
                                     <form enctype="multipart/form-data"  method="post" action="profile.php">
                                         <div class="form-group">
                                             Аватар: <input type="file" name="avatarAcc" accept="image/*" title="Выбрать аватар">
