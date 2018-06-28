@@ -17,6 +17,8 @@
     <body>
         <?php
             session_start();
+            $key = md5(uniqid(rand(),1));
+
             include_once ('bd.php');
             include_once ('menu.php');
 
@@ -28,8 +30,26 @@
             // Максимальный размер файла
             $size = 10240000;
 
+            if (isset($_REQUEST["deleteAvatar"])) {
+                $queryAccaunt = "SELECT avatar
+                                FROM t_user
+                                WHERE `id`='". $_SESSION['user_id'] ."'
+                                LIMIT 1";
+                $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error().$queryAccaunt);
+                while ($row = mysqli_fetch_assoc($accaunt)) {
+                    if ($row['avatar'] != NULL) {
+                        unlink($row['avatar']);
+                    };
+                };
+                $queryAccauntImg = "UPDATE t_user SET avatar = NULL 
+                                    WHERE `id`=" . $_SESSION['user_id'] . "
+                                    LIMIT 1";
+                $accaunt = mysqli_query($link, $queryAccauntImg) or trigger_error(mysqli_error() . $queryAccauntImg);
 
-            // Обработка запроса
+            };
+
+
+        // Обработка запроса
             if (isset($_REQUEST['editProfile'])) {
                 $dateAva = date("Y_m_d_H_i_s");
                 $fileExtension = pathinfo($_FILES['avatarAcc']['name'], PATHINFO_EXTENSION);
@@ -54,7 +74,9 @@
                             LIMIT 1";
                         $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error().$queryAccaunt);
                         while ($row = mysqli_fetch_assoc($accaunt)){
-                            unlink($row['avatar']);
+                            if ($row['avatar'] != NULL) {
+                                unlink($row['avatar']);
+                            };
                         };
                         $queryAccauntImg = "UPDATE t_user SET
                                             avatar = '" . $path . $nameAva . "'
@@ -63,6 +85,8 @@
                         $accaunt = mysqli_query($link, $queryAccauntImg) or trigger_error(mysqli_error() . $queryAccauntImg);
                     };
                 };
+
+
                 if (($_REQUEST['userName']) != "") {
                     $queryAccaunt = "UPDATE t_user SET
                                             name = '" . $_REQUEST['userName'] . "'
@@ -111,8 +135,17 @@
                                     <form enctype="multipart/form-data"  method="post" action="profile.php">
                                         <div class="form-group">
                                             Аватар: <input type="file" name="avatarAcc" accept="image/*" title="Выбрать аватар">
-                                        </div>    
-                                        <br/>
+                                        </div>';
+
+
+                    if ($row['avatar'] != NULL) {
+                        echo            '<button type="submit" name="deleteAvatar"  class="btn btn-danger">
+                                            <i class="far fa-trash-alt"></i> Удалить аватар
+                                        </button>';
+                    };
+
+
+                    echo               '<br/>
                                         <div class="form-group">
                                             eMail: <h5>' . $row['email'] . '</h5>
                                         </div>
@@ -144,7 +177,7 @@
                         //                                <option value="F">Женский</option>
                     echo                             '</select>   
                                         </div>    
-                                        <button type="submit" name="editProfile"  class="btn btn-primary">
+                                        <button type="submit" name="editProfile" class="btn btn-primary">
                                             <i class="fas fa-file-upload"></i> Обновить данные
                                         </button>
                                     </form>
@@ -153,6 +186,9 @@
                 
                         </div>';
             };
+
+
+
         ?>
 
 
