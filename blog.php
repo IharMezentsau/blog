@@ -48,6 +48,10 @@
                 echo                            'img/unknow.jpg';
             };
         };
+        $quaryAnswerCount = 'SELECT COUNT(t_answer_message.id) AS answer_count FROM t_answer_message 
+                                                WHERE t_answer_message.message_id = ' . $row['id_message'] . ';';
+        $answerCount = mysqli_query($link, $quaryAnswerCount);
+        $resultAnswerCount = mysqli_fetch_array($answerCount);
         echo                                        '" alt="" class="img-circle img-responsive img-blog">
                                     <h5>Имя автора: ' . $row['user_name_message'] . '</h5>
                                     <h5>Дата сообщения: ' . $row['date_message'] . '</h5>
@@ -57,7 +61,8 @@
                                 '</div>
                               
                             </div>
-                            <a href="#spoiler-' . $row['id_message'] . '" data-toggle="collapse" class="btn btn-primary collapsed spoiler">Ответ</a>
+                            <a href="#spoiler-' . $row['id_message'] . '" data-toggle="collapse" class="btn btn-primary collapsed spoiler">Ответов 
+                            <span class="badge">' . $resultAnswerCount[0] . '</span></a>
                             <div class="collapse" id="spoiler-' . $row['id_message'] . '">
                                 <div class="well">';
 

@@ -32,6 +32,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
     <script src="js/validator.js"></script>
 
+
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
