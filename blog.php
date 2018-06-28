@@ -32,7 +32,7 @@
                     <div class="thumbnail">
                         <div class="caption">
                             <div class="container-fluid">
-                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                                     <img src="';
         if ($row['avatar'] != null) {
             echo                                $row['avatar'];
@@ -53,10 +53,10 @@
         $answerCount = mysqli_query($link, $quaryAnswerCount);
         $resultAnswerCount = mysqli_fetch_array($answerCount);
         echo                                        '" alt="" class="img-circle img-responsive img-blog">
-                                    <h5>Имя автора: ' . $row['user_name_message'] . '</h5>
-                                    <h5>Дата сообщения: ' . $row['date_message'] . '</h5>
+                                    <h6>Имя автора: ' . $row['user_name_message'] . '</h6>
+                                    <h6>Дата сообщения: ' . $row['date_message'] . '</h6>
                                 </div>
-                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 well">
+                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8 well">
                                     <p>' . $row['message'] . '</p>' .
                                 '</div>
                               
@@ -90,7 +90,7 @@
                                             <div class="thumbnail">
                                                 <div class="caption">
                                                     <div class="container-fluid">
-                                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                                        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
                                                             <img src="';
             if ($row['avatar'] != null) {
                 echo                                                $row['avatar'];
@@ -107,10 +107,10 @@
                 };
             };
             echo                                                                '" alt="" class="img-circle img-responsive img-blog">
-                                                            <h5>Имя автора: ' . $row['user_name_answer'] . '</h5>
-                                                            <h5>Дата сообщения: ' . $row['date_answer'] . '</h5>
+                                                            <h6>Имя автора: ' . $row['user_name_answer'] . '</h6>
+                                                            <h6>Дата сообщения: ' . $row['date_answer'] . '</h6>
                                                         </div>
-                                                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 well">
+                                                        <div class="col-lg-10 col-md-10 col-sm-6 col-xs-6 well">
                                                             <p>' . $row['answer'] . '</p>' .
                                                         '</div>
                                                       
