@@ -8,10 +8,10 @@
 
         <title>Б - Профиль</title>
 
-        <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
+        <link rel="stylesheet" href="lib/node_modules/bootstrap3/dist/css/bootstrap.css" type="text/css">
         <link href="css/style.css" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
+        <link rel="stylesheet" href="lib/node_modules/@fortawesome/fontawesome-free/css/all.css">
+        <link rel="stylesheet" href="lib/node_modules/jquery.formvalid/dist/jquery.formValid.csss">
 
     </head>
     <body>
@@ -134,7 +134,10 @@
                     echo                                            '" alt="" class="img-circle img-responsive img-profile">
                                     <form enctype="multipart/form-data"  method="post" action="profile.php">
                                         <div class="form-group">
-                                            Аватар: <input type="file" name="avatarAcc" accept="image/*" title="Выбрать аватар">
+                                            Аватар: <input type="file" accept="image/*" name="avatarAcc" id="selectedFile" style="display: none;" >
+                                                    <input type="button" value="Выбрать аватар" class="btn btn-default" 
+                                                            onclick="document.getElementById(\'selectedFile\').click();" />
+                                                    <h5 id="fileNameLoad"></h5>        
                                         </div>';
 
 
@@ -194,21 +197,23 @@
 
 
         <!--<script src="js/validationReg.js" type="text/javascript"></script>-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="js/bootstrap.js"></script>
+        <script src="lib/node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="lib/node_modules/bootstrap3/dist/js/bootstrap.js"></script>
         <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
         <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
-        <script src="js/validator.js"></script>
-        <script src="http://gregpike.net/demos/bootstrap-file-input/bootstrap.file-input.js"></script>
+
+        <!--<script src="js/validator.js"></script>-->
 
         <script>
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip();
                 $('[data-tooltip="tooltip"]').tooltip();
             });
-            $('input[type=file]').bootstrapFileInput();
-            $('.file-inputs').bootstrapFileInput();
+            $('#selectedFile').on('change', function (e) {
+                console.log(e.target.files[0].name);
+                $('#fileNameLoad').text(e.target.files[0].name);
+            });
         </script>
 
         <script>

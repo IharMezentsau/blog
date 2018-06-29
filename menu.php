@@ -24,7 +24,7 @@
                         echo    '<div class="form-group">
                                     <a href="profile.php" class="form-control btn btn-primary" data-tooltip="tooltip" 
                                                 data-placement="bottom" title="Вход в личный кабинет"> 
-                                            <i class="fas fa-user"></i> 
+                                            <i class="fas fa-user"></i>
                                     </a>
                                 </div>
                                 <div class="form-group">
