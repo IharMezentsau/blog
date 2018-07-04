@@ -1,22 +1,6 @@
-a.spoiler:after{
-    content: " [-]";
-}
-
-a.spoiler.collapsed:after{
-    content: " [+]";
-}
 
 .breadcrumb > li + li: before{
     content: "\f30b";
     font-family: 'Font Awesome 5 Free';
 }
 
-img.img-profile{
-    width: 480px;
-    height: 320px;
-}
-
-img.img-blog{
-    width: 92px;
-    height: 64px;
-}
