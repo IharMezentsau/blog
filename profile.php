@@ -59,7 +59,7 @@
 
 
         // Обработка запроса
-            if (isset($_REQUEST['editProfile'])) {
+            if (isset($_REQUEST['editProfile']) && ($_POST['editProfile'] == 'update')) {
                 $dateAva = date("Y_m_d_H_i_s");
                 $fileExtension = pathinfo($_FILES['avatarAcc']['name'], PATHINFO_EXTENSION);
                 $nameAva = $_SESSION['user_id'] . $dateAva . "." . $fileExtension;
@@ -127,11 +127,170 @@
                             LIMIT 1";
             $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error().$queryAccaunt);
 
+
+
             while ($row = mysqli_fetch_assoc($accaunt)) {
-                    echo '<div class="container">
-                            <div class="item">
-                                <div class="thumbnail">
-                                    <img src="';
+                $options = array( 'U'=>'Скрыт', 'M'=>'Мужской', 'F'=>'Женский');
+                $valueSex = $options[$row['sex']];
+
+                    echo '<div class="conteiner">
+
+                              <!-- Profile Image -->
+                              <div class="box box-primary">
+                                <div class="box-body box-profile">
+                                  <img class="profile-user-img img-responsive img-circle" src="';
+                    if ($row['avatar'] != null) {
+                        echo                                                                    $row['avatar'];
+                    }
+                    else {
+                        if ($row['sex'] == 'M') {echo                                           'img/male.jpg';}
+                        elseif ($row['sex'] == 'F') {echo                                       'img/female.jpg';}
+                        elseif ($row['sex'] == 'U') {echo                                       'img/unknow.jpg';};
+                    };
+                    echo                                                                                        '" alt="User profile picture">';
+
+                    if (isset($_POST['editProfile']) && ($_POST['editProfile'] == 'change')){
+                        /*echo '<input class="form-control input-group-lg" autocomplete="off" name="newMessage" type="text" placeholder="Напишите сообщение">
+                                <span class="input-group-btn">
+                                    <button type="submit"  class="btn btn-group-lg btn-primary btn-flat btn-group" name="message_id" >
+                                                           <i class="fas fa-share-square"></i>
+                                    </button>
+                                </span>';*/
+
+                        echo        '<form enctype="multipart/form-data"  method="post" action="profile.php">
+                                        
+                                            <input type="file" accept="image/*" name="avatarAcc" id="selectedFile" style="display: none;" >
+                                            <ul class="list-group list-group-unbordered">
+                                                <li class="list-group-item">
+                                                    <div class="btn-group btn-group-justified">';
+                        if ($row['avatar'] != NULL) {
+                            echo                '    <div class="btn-group">
+                                                        <button type="submit" name="deleteAvatar"  class="btn btn-danger btn-block btn-group">
+                                                            <i class="far fa-trash-alt"></i> Удалить аватар
+                                                        </button>
+                                                    </div>';
+                        };
+                        echo                           '<div class="btn-group">
+                                                    <input type="button" value="Выбрать аватар" class="btn btn-default btn-block" 
+                                                            onclick="document.getElementById(\'selectedFile\').click();">
+                                                        </div>    
+                                                    </div>
+                                                    <p class="text-muted text-center" id="fileNameLoad"></p>  
+                                                </li>
+                                            </ul>          
+                                        
+                                        <h3 class="profile-username text-center">' . $row['name'] . ' ' . $row['familyname'] . '</h3>
+                                        <p class="text-muted text-center">eMail: ' . $row['email'] . '</p>
+                                                            
+                                        <ul class="list-group list-group-unbordered">
+                                            <li class="list-group-item">
+                                              <b>Дата регистрации</b> <a class="pull-right">' . $row['date'] . '</a>
+                                            </li>
+                                            <li class="list-group-item">
+                                              <b>Имя</b> <a class="pull-right"><input type="text" class="form-control pull-right" name="userName" placeholder="' . $row['name'] . '" value=""></a>
+                                            <li class="list-group-item">
+                                              <b>Фамилия</b> <a class="pull-right"> <input type="text" class="form-control" name="familyName" placeholder="' . $row['familyname'] . '" value=""></a>
+                                            </li>
+                                            <li class="list-group-item">
+                                              <b>Пол</b> 
+                                              <a class="pull-right">
+                                                <select name="gender" class="form-control" size="1">';
+
+                    foreach($options as $value=>$name) {
+                        if($value == $row['sex']) {
+                            echo                        '<option selected value="' . $value . '">' . $name . '</option>';
+                        }
+                        else {
+                            echo                        '<option value="' . $value . '">' . $name . '</option>';
+                        };
+                    };
+
+                    echo                        '</select>
+                                              </a>
+                                            </li>
+                                                
+                                            <button type="submit" name="editProfile" value="update" class="btn btn-primary btn-block">
+                                                <i class="fas fa-file-upload"></i> Обновить данные
+                                            </button>
+                                        </ul>
+                                    </form>';
+                    }
+                    else {
+                        echo            '<h3 class="profile-username text-center">' . $row['name'] . ' ' . $row['familyname'] . '</h3>
+                        
+                                        <p class="text-muted text-center">eMail: ' . $row['email'] . '</p>
+                                            
+                                        <ul class="list-group list-group-unbordered">
+                                            <li class="list-group-item">
+                                              <b>Дата регистрации</b> <a class="pull-right">' . $row['date'] . '</a>
+                                            </li>
+                                            <li class="list-group-item">
+                                              <b>Пол</b> <a class="pull-right">' . $valueSex . '</a>
+                                            </li>
+                                        </ul>
+                                        <form enctype="multipart/form-data"  method="post" action="profile.php">
+                                              <button type="submit" name="editProfile" value="change" class="btn btn-primary btn-block">
+                                                    <b>Изменить данные</b>
+                                              </button>
+                                        </form>';
+
+                    echo            '</div>
+                                    <!-- /.box-body -->
+                                  </div>
+                                  <!-- /.box -->
+                            
+                                      <!-- About Me Box -->
+                                      <div class="box box-primary">
+                                        <div class="box-header with-border">
+                                          <h3 class="box-title">About Me</h3>
+                                        </div>
+                                        <!-- /.box-header -->
+                                        <div class="box-body">
+                                          <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
+                            
+                                          <p class="text-muted">
+                                            B.S. in Computer Science from the University of Tennessee at Knoxville
+                                          </p>
+                            
+                                          <hr>
+                            
+                                          <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+                            
+                                          <p class="text-muted">Malibu, California</p>
+                            
+                                          <hr>
+                            
+                                          <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
+                            
+                                          <p>
+                                            <span class="label label-danger">UI Design</span>
+                                            <span class="label label-success">Coding</span>
+                                            <span class="label label-info">Javascript</span>
+                                            <span class="label label-warning">PHP</span>
+                                            <span class="label label-primary">Node.js</span>
+                                          </p>
+                            
+                                          <hr>
+                            
+                                          <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
+                            
+                                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+                                        </div>
+                                        <!-- /.box-body -->
+                                      </div>
+                                      <!-- /.box -->
+                                    </div>
+                                    <!-- /.col -->
+                                            
+    
+    
+    
+    
+                            <div class="container">
+                                <div class="item">
+                                    <div class="thumbnail">
+                                        <img src="';
+                    };
                     if ($row['avatar'] != null) {
                         echo $row['avatar'];
                     }
