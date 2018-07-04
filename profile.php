@@ -157,7 +157,7 @@
                                     </button>
                                 </span>';*/
 
-                        echo        '<form enctype="multipart/form-data"  method="post" action="profile.php">
+                        echo        '<form enctype="multipart/form-data" class="form-horizontal" method="post" action="profile.php">
                                         
                                             <input type="file" accept="image/*" name="avatarAcc" id="selectedFile" style="display: none;" >
                                             <ul class="list-group list-group-unbordered">
@@ -181,38 +181,49 @@
                                         
                                         <h3 class="profile-username text-center">' . $row['name'] . ' ' . $row['familyname'] . '</h3>
                                         <p class="text-muted text-center">eMail: ' . $row['email'] . '</p>
-                                                            
-                                        <ul class="list-group list-group-unbordered">
-                                            <li class="list-group-item">
-                                              <b>Дата регистрации</b> <a class="pull-right">' . $row['date'] . '</a>
-                                            </li>
-                                            <li class="list-group-item">
-                                              <b>Имя</b> <a class="pull-right"><input type="text" class="form-control pull-right" name="userName" placeholder="' . $row['name'] . '" value=""></a>
-                                            <li class="list-group-item">
-                                              <b>Фамилия</b> <a class="pull-right"> <input type="text" class="form-control" name="familyName" placeholder="' . $row['familyname'] . '" value=""></a>
-                                            </li>
-                                            <li class="list-group-item">
-                                              <b>Пол</b> 
-                                              <a class="pull-right">
-                                                <select name="gender" class="form-control" size="1">';
+                                        
+                                        
+                                              <div class="box-body">
+                                                <div class="form-group">
+                                                  <label for="inputName" class="col-sm-2 control-label">Имя</label>                                            
+                                                  <div class="col-sm-10">
+                                                    <input type="text" class="form-control" name="userName" id="inputName" placeholder="' . $row['name'] . '">
+                                                  </div>
+                                                </div>
+                                                <div class="form-group">
+                                                  <label for="inputFamilyName" class="col-sm-2 control-label">Фамилия</label>
+                                                  <div class="col-sm-10">
+                                                    <input type="text" class="form-control" name="familyName" id="inputFamilyName" placeholder="' . $row['familyname'] . '">
+                                                  </div>
+                                                </div>
+                                                <div class="form-group">
+                                                  <label for="inputSex" class="col-sm-2 control-label">Пол</label>
+                                                  <div class="col-sm-10">
+                                                    <select name="gender" class="form-control" id="inputSex" size="3">';
 
-                    foreach($options as $value=>$name) {
-                        if($value == $row['sex']) {
-                            echo                        '<option selected value="' . $value . '">' . $name . '</option>';
-                        }
-                        else {
-                            echo                        '<option value="' . $value . '">' . $name . '</option>';
+                        foreach($options as $value=>$name) {
+                            if($value == $row['sex']) {
+                                echo                    '<option selected value="' . $value . '">' . $name . '</option>';
+                            }
+                            else {
+                                echo                    '<option value="' . $value . '">' . $name . '</option>';
+                            };
                         };
-                    };
 
-                    echo                        '</select>
-                                              </a>
-                                            </li>
-                                                
-                                            <button type="submit" name="editProfile" value="update" class="btn btn-primary btn-block">
-                                                <i class="fas fa-file-upload"></i> Обновить данные
-                                            </button>
-                                        </ul>
+                    echo                            '</select>
+                                                  </div>
+                                                </div>
+                                              </div>
+      
+                                              <!-- /.box-body -->
+                                            <div class="box-footer">
+                                                <button type="submit"  name="editProfile" value="cancel" class="btn btn-default">Отмена</button>
+                                                <button type="submit" name="editProfile" value="update" class="btn btn-info pull-right">
+                                                    <i class="fas fa-file-upload"></i> Обновить данные
+                                                </button>
+                                            </div>
+                                              <!-- /.box-footer -->    
+                                    
                                     </form>';
                     }
                     else {
@@ -280,82 +291,9 @@
                                       </div>
                                       <!-- /.box -->
                                     </div>
-                                    <!-- /.col -->
-                                            
-    
-    
-    
-    
-                            <div class="container">
-                                <div class="item">
-                                    <div class="thumbnail">
-                                        <img src="';
-                    };
-                    if ($row['avatar'] != null) {
-                        echo $row['avatar'];
-                    }
-                    else {
-                        if ($row['sex'] == 'M') {echo 'img/male.jpg';}
-                        elseif ($row['sex'] == 'F') {echo 'img/female.jpg';}
-                        elseif ($row['sex'] == 'U') {echo 'img/unknow.jpg';};
-                    };
-                    echo                                            '" alt="" class="img-circle img-responsive img-profile">
-                                    <form enctype="multipart/form-data"  method="post" action="profile.php">
-                                        <div class="form-group">
-                                            Аватар: <input type="file" accept="image/*" name="avatarAcc" id="selectedFile" style="display: none;" >
-                                                    <input type="button" value="Выбрать аватар" class="btn btn-default" 
-                                                            onclick="document.getElementById(\'selectedFile\').click();" />
-                                                    <h5 id="fileNameLoad"></h5>        
-                                        </div>';
-
-
-                    if ($row['avatar'] != NULL) {
-                        echo            '<button type="submit" name="deleteAvatar"  class="btn btn-danger">
-                                            <i class="far fa-trash-alt"></i> Удалить аватар
-                                        </button>';
+                                    <!-- /.col -->';
                     };
 
-
-                    echo               '<br/>
-                                        <div class="form-group">
-                                            eMail: <h5>' . $row['email'] . '</h5>
-                                        </div>
-                                        <div class="form-group">
-                                            Дата регистрации: <h5>' . $row['date'] . '</h5>
-                                        </div>        
-                                        <div class="form-group">      
-                                            Имя:    <input type="text" class="form-control" name="userName" placeholder="' . $row['name'] . '" value="">     
-                                        </div>
-                                        <div class="form-group">      
-                                            Фамилия:    <input type="text" class="form-control" name="familyName" placeholder="' . $row['familyname'] . '" value="">     
-                                        </div>
-                                        <div class="form-group">
-                                            Пол:    
-                                                    <select name="gender" class="form-control" size="3">';
-                    $options = array( 'U'=>'Скрыт', 'M'=>'Мужской', 'F'=>'Женский');
-                    foreach($options as $value=>$name) {
-                        if($value == $row['sex']) {
-                            echo                        '<option selected value="' . $value . '">' . $name . '</option>';
-                        }
-                        else {
-                            echo                        '<option value="' . $value . '">' . $name . '</option>';
-                        };
-                    };
-                                                        
-
-                    //                                    <option value="U">Скрыт</option>
-                      //                                  <option value="M">Мужской</option>
-                        //                                <option value="F">Женский</option>
-                    echo                             '</select>   
-                                        </div>    
-                                        <button type="submit" name="editProfile" class="btn btn-primary">
-                                            <i class="fas fa-file-upload"></i> Обновить данные
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                
-                        </div>';
             };
 
 
