@@ -89,113 +89,114 @@
                     </form>';
         };
         echo '</div>
-                <!-- /.post -->
+              <!-- /.post -->';
                 
             
-                
-                            <div class="collapse container" id="spoiler-' . $row['id_message'] . '">
+        if ($resultAnswerCount[0] != 0) {
+            echo '<div class="collapse container" id="spoiler-' . $row['id_message'] . '">
                                 <div class="well">';
 
-        $message_id = $row['id_message'];
+            $message_id = $row['id_message'];
 
-        $quaryResultAnswer = 'SELECT t_answer_message.id AS id_answer,
-                                                t_answer_message.answer AS answer,
-                                                t_user.name AS user_name_answer,
-                                                t_user.familyname AS user_familyname_answer,
-                                                t_answer_message.date AS date_answer,
-                                                t_user.avatar AS avatar_answer,
-                                                t_user.sex AS sex_answer,
-                                                t_answer_message.user_id AS answer_message_user_id
-                                                FROM t_answer_message INNER JOIN 
-                                                t_user ON t_answer_message.user_id = t_user.id
-                                                INNER JOIN t_message ON 
-                                                t_answer_message.message_id = t_message.id 
-                                                WHERE t_answer_message.message_id = ' . $row['id_message'] . '
-                                                ORDER BY t_answer_message.id DESC;';
-        $resultAnswer = mysqli_query($link, $quaryResultAnswer);
+            $quaryResultAnswer = 'SELECT t_answer_message.id AS id_answer,
+                                                    t_answer_message.answer AS answer,
+                                                    t_user.name AS user_name_answer,
+                                                    t_user.familyname AS user_familyname_answer,
+                                                    t_answer_message.date AS date_answer,
+                                                    t_user.avatar AS avatar_answer,
+                                                    t_user.sex AS sex_answer,
+                                                    t_answer_message.user_id AS answer_message_user_id
+                                                    FROM t_answer_message INNER JOIN 
+                                                    t_user ON t_answer_message.user_id = t_user.id
+                                                    INNER JOIN t_message ON 
+                                                    t_answer_message.message_id = t_message.id 
+                                                    WHERE t_answer_message.message_id = ' . $row['id_message'] . '
+                                                    ORDER BY t_answer_message.id DESC;';
+            $resultAnswer = mysqli_query($link, $quaryResultAnswer);
 
-        echo                        '<div class="box box-warning direct-chat direct-chat-warning">
-                                        <div class="box-body">
-                                            <div class="direct-chat-messages">';
+            echo '<div class="box box-warning direct-chat direct-chat-warning">
+                                            <div class="box-body">
+                                                <div class="direct-chat-messages">';
 
-        while ($row = mysqli_fetch_assoc($resultAnswer)) {
+            while ($row = mysqli_fetch_assoc($resultAnswer)) {
 
-            if ($_SESSION['user_id'] == $row['answer_message_user_id']) {
-                echo                        '
-                                                <!-- Message. Default to the left -->
-                                                <div class="direct-chat-msg">
-                                                  <div class="direct-chat-info clearfix">
-                                                    <span class="direct-chat-name pull-left">' .
-                    $row['user_name_answer'] . ' ' . $row['user_familyname_answer'] . '
-                                                    </span>
-                                                    <span class="direct-chat-timestamp pull-right">' . $row['date_answer'] . '</span>
-                                                  </div>
-                                                  <!-- /.direct-chat-info -->
-                                                  <img class="direct-chat-img" src="';
-                if ($row['avatar_answer'] != null) {
-                    echo $row['avatar_answer'];
-                } else {
-                    if ($row['sex_answer'] == 'M') {
-                        echo 'img/male.jpg';
-                    } elseif ($row['sex_answer'] == 'F') {
-                        echo 'img/female.jpg';
-                    } elseif ($row['sex_answer'] == 'U') {
-                        echo 'img/unknow.jpg';
+                if ((isset($_SESSION['user_id'])) && ($_SESSION['user_id'] == $row['answer_message_user_id'])) {
+                    echo '
+                                                    <!-- Message. Default to the left -->
+                                                    <div class="direct-chat-msg">
+                                                      <div class="direct-chat-info clearfix">
+                                                        <span class="direct-chat-name pull-left">' .
+                        $row['user_name_answer'] . ' ' . $row['user_familyname_answer'] . '
+                                                        </span>
+                                                        <span class="direct-chat-timestamp pull-right">' . $row['date_answer'] . '</span>
+                                                      </div>
+                                                      <!-- /.direct-chat-info -->
+                                                      <img class="direct-chat-img" src="';
+                    if ($row['avatar_answer'] != null) {
+                        echo $row['avatar_answer'];
+                    } else {
+                        if ($row['sex_answer'] == 'M') {
+                            echo 'img/male.jpg';
+                        } elseif ($row['sex_answer'] == 'F') {
+                            echo 'img/female.jpg';
+                        } elseif ($row['sex_answer'] == 'U') {
+                            echo 'img/unknow.jpg';
+                        };
                     };
-                };
-                echo '" alt="message user image">
-                                                  <!-- /.direct-chat-img -->
-                                                  <div class="direct-chat-text">' .
-                    $row['answer'] . '
+                    echo '" alt="message user image">
+                                                      <!-- /.direct-chat-img -->
+                                                      <div class="direct-chat-text">' .
+                        $row['answer'] . '
+                                                      </div>
+                                                      <!-- /.direct-chat-text -->
                                                   </div>
-                                                  <!-- /.direct-chat-text -->
-                                              </div>
-                                              <!-- /.direct-chat-msg -->';
-            } else {
-                echo '<!-- Message to the right -->
-                                                <div class="direct-chat-msg right">
-                                                  <div class="direct-chat-info clearfix">
-                                                    <span class="direct-chat-name pull-right">' .
-                    $row['user_name_answer'] . ' ' . $row['user_familyname_answer'] . '
-                                                    </span>
-                                                    <span class="direct-chat-timestamp pull-left">' . $row['date_answer'] . '</span>
-                                                  </div>
-                                                  <!-- /.direct-chat-info -->
-                                                  <img class="direct-chat-img" src="';
-                if ($row['avatar_answer'] != null) {
-                    echo $row['avatar_answer'];
-                } else {
-                    if ($row['sex_answer'] == 'M') {
-                        echo 'img/male.jpg';
-                    } elseif ($row['sex_answer'] == 'F') {
-                        echo 'img/female.jpg';
-                    } elseif ($row['sex_answer'] == 'U') {
-                        echo 'img/unknow.jpg';
+                                                  <!-- /.direct-chat-msg -->';
+                }
+                else {
+                    echo '<!-- Message to the right -->
+                                                    <div class="direct-chat-msg right">
+                                                      <div class="direct-chat-info clearfix">
+                                                        <span class="direct-chat-name pull-right">' .
+                        $row['user_name_answer'] . ' ' . $row['user_familyname_answer'] . '
+                                                        </span>
+                                                        <span class="direct-chat-timestamp pull-left">' . $row['date_answer'] . '</span>
+                                                      </div>
+                                                      <!-- /.direct-chat-info -->
+                                                      <img class="direct-chat-img" src="';
+                    if ($row['avatar_answer'] != null) {
+                        echo $row['avatar_answer'];
+                    } else {
+                        if ($row['sex_answer'] == 'M') {
+                            echo 'img/male.jpg';
+                        } elseif ($row['sex_answer'] == 'F') {
+                            echo 'img/female.jpg';
+                        } elseif ($row['sex_answer'] == 'U') {
+                            echo 'img/unknow.jpg';
+                        };
                     };
-                };
-                echo '" alt="message user image">
-                                                  <!-- /.direct-chat-img -->
-                                                  <div class="direct-chat-text">
-                                                    ' . $row['date_answer'] . '
+                    echo '" alt="message user image">
+                                                      <!-- /.direct-chat-img -->
+                                                      <div class="direct-chat-text">
+                                                        ' . $row['date_answer'] . '
+                                                      </div>
+                                                      <!-- /.direct-chat-text -->
                                                   </div>
-                                                  <!-- /.direct-chat-text -->
-                                              </div>
-                                              <!-- /.direct-chat-msg -->';
+                                                  <!-- /.direct-chat-msg -->';
+                };
+
+
             };
-
-
-        };
-        echo                                '</div>
-                                            <!--/.direct-chat-messages-->
+            echo '</div>
+                                                <!--/.direct-chat-messages-->
+                                            </div>
+                                            <!-- /.box-body -->
+                                        <!--/.direct-chat -->
                                         </div>
-                                        <!-- /.box-body -->
-                                    <!--/.direct-chat -->
+                                    <!--/.direct-well -->        
                                     </div>
-                                <!--/.direct-well -->        
-                                </div>
-                            <!--/.direct-collapse --> 
-                            </div>';
-
+                                <!--/.direct-collapse --> 
+                                </div>';
+        };
     };
 
 ?>

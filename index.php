@@ -33,6 +33,7 @@
             include_once ('menu.php');
             include_once ('blog.php');
             include_once ('regForm.php');
+
         ?>
     </div>
     <!--<script src="js/validationReg.js" type="text/javascript"></script>-->
