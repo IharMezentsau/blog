@@ -14,6 +14,8 @@
         $addAnswer = mysqli_query($link, $querySendAnswer);
     };
 
+    $viewMessage = 10;
+
     if (isset($_GET['page'])) {
         $i = $_GET['page'];
     }
@@ -22,7 +24,7 @@
         $_GET['page'] = $i;
     };
 
-    $numPost = $_GET['page'] * 10 - 10;
+    $numPost = $_GET['page'] * $viewMessage - $viewMessage;
 
     $resultMessage = mysqli_query($link, 'SELECT t_message.id AS id_message,
                                                 t_message.message AS message, 
@@ -34,12 +36,12 @@
                                                 FROM t_message INNER JOIN 
                                                 t_user ON t_message.user_id = t_user.id
                                                 ORDER BY t_message.id DESC
-                                                LIMIT ' . $numPost . ', 10;');
+                                                LIMIT ' . $numPost . ', ' . $viewMessage . ';');
 
     $countMessage = mysqli_query($link, 'SELECT COUNT(t_message.id) AS count_message
                                                 FROM t_message ;');
     $resultCountMessage = mysqli_fetch_array($countMessage);
-    $countPage = ceil($resultCountMessage[0]/10);
+    $countPage = ceil($resultCountMessage[0]/$viewMessage);
 
     if (isset($_SESSION['user_id'])) {
         echo '  <form action="index.php" class="form-horizontal" name="sendMessage" method="post">
@@ -247,18 +249,57 @@
 
     $i = 0;
 
-    while ($i++ < $countPage) {
+    if ($countPage <= 10) {
+        while ($i++ < $countPage) {
 
+            if ($_GET['page'] == $i) {
+                echo '<li class="active" ><a href="index.php?page=' . $i . '" >' . $i . '</a></li >';
+            } else {
+                echo '<li><a href="index.php?page=' . $i . '" >' . $i . '</a></li >';
+            };
 
+        };
+    }
+    else{
+        switch ($_GET['page']){
+            case 1:
+                $arrayBiggerTen = array( 1, 2, 'null',($countPage - 1), $countPage);
+                break;
+            case 2:
+                $arrayBiggerTen = array( 1, 2, 'null',($countPage - 1), $countPage);
+                break;
+            case 3:
+                $arrayBiggerTen = array( 1, 2, 3, 'null',($countPage - 1), $countPage);
+                break;
+            case ($countPage - 2):
+                $arrayBiggerTen = array( 1, 2, 'null',($countPage - 2), ($countPage - 1), $countPage);
+                break;
+            case ($countPage - 1):
+                $arrayBiggerTen = array( 1, 2, 'null', ($countPage - 1), $countPage);
+                break;
+            case ($countPage):
+                $arrayBiggerTen = array( 1, 2, 'null',($countPage - 1), $countPage);
+                break;
+            default:
+                $arrayBiggerTen = array( 1, 'null',($_GET['page'] - 1), $_GET['page'], ($_GET['page'] + 1), 'null', $countPage);
+                break;
+        };
 
-       if ($_GET['page'] == $i) {
-           echo '<li class="active" ><a href="index.php?page=' . $i . '" >' . $i . '</a></li >';
-       }
-       else{
-           echo '<li><a href="index.php?page=' . $i . '" >' . $i . '</a></li >';
-       };
+        foreach ($arrayBiggerTen as $valueArrayPage) {
 
+            if ($_GET['page'] == $valueArrayPage) {
+                echo '<li class="active" ><a href="index.php?page=' . $valueArrayPage . '" >' . $valueArrayPage . '</a></li >';
+            }
+            elseif ($valueArrayPage == 'null'){
+                echo '<li><a>...</a></li >';
+            }
+            else {
+                echo '<li><a href="index.php?page=' . $valueArrayPage . '" >' . $valueArrayPage . '</a></li >';
+            };
+
+        };
     };
+
     if ($_GET['page'] == $countPage) {
         echo                            '<li class="disabled">
                                             <a>
