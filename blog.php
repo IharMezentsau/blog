@@ -85,8 +85,42 @@
                     <p>
                         ' . $row['message'] . '
                     </p>
-                    <ul class="list-inline container">
-                        <li class="pull-right">
+                    <ul class="list-inline container">';
+
+        $countMessageLike = mysqli_query($link, "SELECT COUNT(user_id) FROM t_like WHERE message_id =" . $row['id_message'] . ";");
+        $resultCountMessageLike = mysqli_fetch_array($countMessageLike);
+
+        if (isset($_SESSION['user_id'])) {
+            echo        '<li>
+                            <span class="badge" id="badgeId-' . $row['id_message'] . '">' . $resultCountMessageLike[0] . '</span>
+                                <button id="buttonId-' . $row['id_message'] . '" data-idMessage="' . $row['id_message'] . '"
+                                        class="';
+            $queryFindLike = "SELECT *
+                                FROM t_like
+                                WHERE `user_id`='". $_SESSION['user_id'] ."' AND `message_id`='". $row['id_message'] ."'
+                                LIMIT 1;";
+            $sqlFindLike = mysqli_query($link, $queryFindLike);
+
+            if (mysqli_num_rows($sqlFindLike) != 1) {
+                echo                                'likeButton btn btn-info btn-sm';
+            }
+            else{
+                echo                                'likeButton btn btn-danger btn-sm';
+            };
+
+            echo                                                                '">   
+                                    <i class="far fa-thumbs-up" ></i> Like
+                                </button >
+                        </li >';
+        }
+        else{
+            echo        '<li>
+                            <span class="badge" id="badgeId-' . $row['id_message'] . '">' . $resultCountMessageLike[0] . '</span>
+                                    <i class="far fa-thumbs-up" ></i> Like
+                        </li >';
+        };
+
+        echo            '<li class="pull-right">
                             <a href="#spoiler-' . $row['id_message'] . '" data-toggle="collapse" class="link-black text-sm">
                                 <i class="far fa-comments"></i> Комментариев
                                 (' . $resultAnswerCount[0] . ')

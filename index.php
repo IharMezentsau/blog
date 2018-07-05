@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="lib/node_modules/bootstrap3/dist/css/bootstrap.css">
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="lib/node_modules/@fortawesome/fontawesome-free/css/all.css">
-    <link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
+    <!--<link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">-->
     <link rel="stylesheet" href="lib/node_modules/admin-lte/dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="lib/node_modules/admin-lte/dist/css/skins/skin-purple.css">
 
@@ -80,6 +80,35 @@
             }
         });
     </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".likeButton").click(function(event) {
+                console.log(event);
+                var id = $(this).attr('data-idMessage');
+                var data = {id:id};
+                $.ajax({
+                    type:"POST",
+                    url:"like.php",
+                    data:JSON.stringify(data),
+                    success:
+                        function(data) {
+                                answer(data);
+                        },
+                }, "json");
+                function answer(n) {
+                    var badgeId = '#badgeId-' + id;
+                    var buttonId = '#buttonId-' + id;
+                    $(badgeId).text(n);
+                    $(buttonId).toggleClass('likeButton btn btn-danger btn-sm').toggleClass('likeButton btn btn-info btn-sm');
+
+
+                };
+            });
+        });
+
+
+    </script>
+
     <!--<script src="js/validationReg.js"></script>-->
 
 </body>
