@@ -14,6 +14,15 @@
         $addAnswer = mysqli_query($link, $querySendAnswer);
     };
 
+    if (isset($_GET['page'])) {
+        $i = $_GET['page'];
+    }
+    else {
+        $i = 1;
+        $_GET['page'] = $i;
+    };
+
+    $numPost = $_GET['page'] * 10 - 10;
 
     $resultMessage = mysqli_query($link, 'SELECT t_message.id AS id_message,
                                                 t_message.message AS message, 
@@ -24,7 +33,13 @@
                                                 t_user.sex AS sex
                                                 FROM t_message INNER JOIN 
                                                 t_user ON t_message.user_id = t_user.id
-                                                ORDER BY t_message.id DESC;');
+                                                ORDER BY t_message.id DESC
+                                                LIMIT ' . $numPost . ', 10;');
+
+    $countMessage = mysqli_query($link, 'SELECT COUNT(t_message.id) AS count_message
+                                                FROM t_message ;');
+    $resultCountMessage = mysqli_fetch_array($countMessage);
+    $countPage = ceil($resultCountMessage[0]/10);
 
     if (isset($_SESSION['user_id'])) {
         echo '  <form action="index.php" class="form-horizontal" name="sendMessage" method="post">
@@ -200,36 +215,79 @@
     };
 
 
+
+    echo                        '<nav class="text-center">
+                                    <ul class="pagination pagination-sm">';
+
+    if ($i == 1) {
+        echo                            '<li class="disabled">
+                                            <a><i class="fas fa-angle-double-left"></i></a>';
+    }
+    else{
+        echo                            '<li>
+                                            <a href="index.php?page=1">
+                                                <i class="fas fa-angle-double-left"></i>
+                                            </a>';
+    };
+
+    echo                                '</li>';
+
+    if ($i == 1) {
+        echo                            '<li class="disabled">
+                                            <a><i class="fas fa-chevron-circle-left"></i></a>';
+    }
+    else{
+        echo                            '<li>
+                                            <a href="index.php?page=' . ($_GET['page'] - 1) . '">
+                                                <i class="fas fa-chevron-circle-left"></i>
+                                            </a>';
+    };
+
+    echo                                '</li>';
+
+    $i = 0;
+
+    while ($i++ < $countPage) {
+
+
+
+       if ($_GET['page'] == $i) {
+           echo '<li class="active" ><a href="index.php?page=' . $i . '" >' . $i . '</a></li >';
+       }
+       else{
+           echo '<li><a href="index.php?page=' . $i . '" >' . $i . '</a></li >';
+       };
+
+    };
+    if ($_GET['page'] == $countPage) {
+        echo                            '<li class="disabled">
+                                            <a>
+                                                <i class="fas fa-chevron-circle-right"></i>
+                                            </a>';
+    }
+    else{
+        echo                            '<li>
+                                            <a href="index.php?page=' . ($_GET['page'] + 1) . '">
+                                                <i class="fas fa-chevron-circle-right"></i>
+                                            </a>';
+    };
+    echo                                '   
+                                        </li>';
+    if ($_GET['page'] == $countPage) {
+        echo                            '<li class="disabled">
+                                            <a>    
+                                                <i class="fas fa-angle-double-right"></i>
+                                            </a>';
+    }
+    else{
+        echo                            '<li>
+                                            <a href="index.php?page=' . $countPage . '">
+                                                <i class="fas fa-angle-double-right"></i>
+                                            </a>';
+    };
+    echo                                   '</li>
+
+                                    </ul>
+                                </nav>';
+
 ?>
-<nav class="text-center">
-    <ul class="pagination pagination-sm">
-        <li class="disabled">
-            <a href="#">
-                <i class="fas fa-angle-double-left"></i>
-            </a>
-        </li>
-        <li class="disabled">
-            <a href="#">
-                <i class="fas fa-chevron-circle-left"></i>
-            </a>
-        </li>
-        <li class="active"><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
-        <li><a href="#">6</a></li>
-        <li>
-            <a href="#">
-                <i class="fas fa-chevron-circle-right"></i>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <i class="fas fa-angle-double-right"></i>
-            </a>
-        </li>
-
-    </ul>
-</nav>
-
