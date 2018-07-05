@@ -1,13 +1,67 @@
-        <header class="main-header">
-            <!-- Header Navbar: style can be found in header.less -->
-            <nav class="navbar navbar-static-top">
-                <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="index.php">Б</a>
+<!--<div class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responsive-menu">
+                <span class="sr-only">Открыть навигацию</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Логотип</a>
+        </div>
+        <div class="collapse navbar-collapse" id="responsive-menu">
+            <ul class="nav navbar-nav">
+                <li><a href="#">Пункт 1</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Пункт 2 <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Пункт 1</a></li>
+                        <li><a href="#">Пункт 2</a></li>
+                        <li><a href="#">Пункт 3</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Пункт 4</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Пункт 3</a></li>
+                <li><a href="#">Пункт 4</a></li>
+            </ul>
+            <form action="" class="navbar-form navbar-right">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="E-mail" value="">
                 </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Пароль" value="">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> ВОЙТИ
+                </button>
+            </form>
+        </div>
+    </div>
+</div>-->
 
-                <div class="navbar-custom-menu">
-                        <ul class="nav navbar-nav">
+<header class="main-header">
+            <!-- Header Navbar: style can be found in header.less -->
+
+            <nav class="navbar navbar-inverse navbar-static-top">
+
+                    <div class="navbar-header">
+<?php
+
+    if (!isset($_SESSION['user_id'])){
+        echo '          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responsive-menu">
+                            <span class="sr-only">Открыть навигацию</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>';
+    };
+?>
+                        <a class="navbar-brand" href="index.php">Б</a>
+                    </div>
+
+                    <div class="navbar-custom-menu">
+                            <ul class="nav navbar-nav">
 
 
 
@@ -84,55 +138,40 @@
                             </li>';
     }
     else {
-            echo '          <li>
-                                <form action="index.php" name="authorisation" class="navbar-form navbar-right collapse navbar-collapse" 
-                                        id="responsive-menu" method="post">
-                    
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" name="userName" placeholder="E-mail" value="">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="password" class="form-control" name="userPassword" placeholder="Пароль" value="">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary form-control">
-                                        <i class="fas fa-sign-in-alt"></i> ВОЙТИ
-                                    </button>
-                                    <button type="button" data-toggle="modal" data-tooltip="tooltip" data-target="#registration"
-                                            class="btn btn-info form-group" title="Регистрация" data-placement="bottom">
-                                         <i class="far fa-address-card"></i>
-                                    </button>
-                                    
-                                </form>
-                            </li>';
+            echo '         
+                            <li>
+                                <div class="collapse navbar-collapse" id="responsive-menu">
+                                    <form action="index.php" name="authorisation" class="navbar-form navbar-right" 
+                                            id="responsive-menu" method="post">
+                        
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="userName" placeholder="E-mail" value="">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control" name="userPassword" placeholder="Пароль" value="">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary form-control">
+                                            <i class="fas fa-sign-in-alt"></i> ВОЙТИ
+                                        </button>
+                                        <button type="button" data-toggle="modal" data-tooltip="tooltip" data-target="#registration"
+                                                class="btn btn-info form-control" title="Регистрация" data-placement="bottom">
+                                             <i class="far fa-address-card"></i>
+                                        </button>
+                                        
+                                    </form>
+                                </div>
+                            </li>
+                            
+                            ';
     };
 ?>
 
                         <!-- Control Sidebar Toggle Button -->
 
-                            <li>
-                                <a href="#" data-toggle="control-sidebar"><i class="fas fa-cogs"></i></a>
-                            </li>
+
                         </ul>
 
-                </div>
-                </div>
+                    </div>
+
             </nav>
         </header>
-
-        <aside class="control-sidebar control-sidebar-dark">
-            <div class="tab-content">
-                <h4 class="control-sidebar-heading">Настройка блога</h4>
-                <div class="form-group">
-                    <label class="control-sidebar-subheading">
-                        <input class="pull-right" data-layout="fixedTop" type="checkbox">
-                        <p>Зафиксировать вернюю панель</p>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label class="control-sidebar-subheading">
-                        <input class="pull-right" data-layout="fixedDown" type="checkbox">
-                        <p>Зафиксировать вернюю панель</p>
-                    </label>
-                </div>
-            </div>
-        </aside>
