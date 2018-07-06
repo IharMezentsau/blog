@@ -15,7 +15,7 @@
         <link href="css/style.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="lib/node_modules/@fortawesome/fontawesome-free/css/all.css">
         <link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
-        <link rel="stylesheet" href="lib/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+        <link rel="stylesheet" href="lib/node_modules/admin-lte/dist/css/adminlte.min.css">
         <link rel="stylesheet" href="lib/node_modules/admin-lte/dist/css/skins/skin-purple.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
