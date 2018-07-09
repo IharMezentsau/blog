@@ -2,6 +2,15 @@
 
     $dateMessage = date("Y/m/d H.i.s");
 
+    $DB = new Db();
+    $dataBase = $DB->getDb();
+    $messageDao = new MessageDao($dataBase);
+    $messages = $messageDao->getMessages();
+    echo '<script>alert('.$messages[0].');</script>';
+    /*while ($messages) {
+        echo $messages[0];
+    };*/
+
     if (isset($_REQUEST['newMessage']) && ($_REQUEST['newMessage'] != "")){
         $querySendMessage = 'INSERT INTO t_message(`date`, `user_id`, `message`) VALUES ("' . $dateMessage .
             '",' . $_SESSION['user_id'] . ',"' . $_REQUEST['newMessage'] . '");';
