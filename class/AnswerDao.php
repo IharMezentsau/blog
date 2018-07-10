@@ -42,7 +42,7 @@
 
         }
 
-        public function updateAnswer($date, $id, $value, $messageId){
+        public function newAnswer($date, $id, $value, $messageId){
 
             $query = $this->data->prepare("INSERT INTO t_answer_message(date, user_id, message_id, answer) VALUES ( :date, :id, :messageId, :value)");
             $query->bindValue(':id', $id, PDO::PARAM_INT);

@@ -18,12 +18,24 @@
 
             $like->countLike = $row['countLike'];
 
-
-            return $row;
+            return $like;
         }
 
-        public function updateLike(){
+        public function insertLike($id, $user_id){
 
+            $query = $this->data->prepare("INSERT INTO t_like(message_id, user_id) VALUES (:id, :user_id)");
+            $query->bindValue(':id', $id, PDO::PARAM_INT);
+            $query->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $query->execute();
+
+        }
+
+        public function deleteLike($id, $user_id){
+
+            $query = $this->data->prepare("DELETE FROM t_like WHERE user_id= :user_id AND message_id= :id");
+            $query->bindValue(':id', $id, PDO::PARAM_INT);
+            $query->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $query->execute();
 
         }
 
@@ -39,19 +51,10 @@
             $row = $this->result->fetch();
 
             $like = new Like();
-            $answer->avatar = $row['avatar'];
 
-            $rows[] = $answer;
-            if ($row['count'] != 1) {
-                $like->likeByUser = 'likeButton btn btn-info btn-sm';
-            }
-            else{
-                $like->likeByUser = 'likeButton btn btn-danger btn-sm';
-            }
+            $like->likeByUser = $row['count'];
 
-            $result = $like->likeByUser;
-
-            return $result;
+            return $like;
 
         }
 

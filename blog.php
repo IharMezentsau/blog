@@ -6,37 +6,17 @@
     $dataBase = $DB->getDb();
 
     $messageDao = new MessageDao($dataBase);
-    $messages = $messageDao->getMessages();
 
     $answerDao = new AnswerDao($dataBase);
-    $answer = $answerDao->getAnswersByMessage(4);
 
-    //$likeDao = new LikeDao($dataBase);
+    $likeDao = new LikeDao($dataBase);
 
-    foreach ($answer as $value) {
-        echo $value->answer;
-        echo '<br/>';
-        echo $value->id;
-        echo '<br/>';
-    };
-    /*foreach ($messages as $value) {
-        echo $value->message;
-        echo '<br/>';
-        echo $value->id;
-        echo '<br/>';
-    };*/
-
-
-    /*if (isset($_REQUEST['newMessage']) && ($_REQUEST['newMessage'] != "")){
-        $querySendMessage = 'INSERT INTO t_message(`date`, `user_id`, `message`) VALUES ("' . $dateMessage .
-            '",' . $_SESSION['user_id'] . ',"' . $_REQUEST['newMessage'] . '");';
-        $addMessage = mysqli_query($link, $querySendMessage);
+    if (isset($_REQUEST['newMessage']) && ($_REQUEST['newMessage'] != "")){
+        $messageDao->newMessage($dateMessage, $_SESSION['user_id'], $_REQUEST['newMessage']);
     };
 
     if (isset($_REQUEST['newAnswer']) && ($_REQUEST['newAnswer'] != "") && (isset($_REQUEST['message_id'] ))){
-        $querySendAnswer = 'INSERT INTO t_answer_message(`date`, `user_id`, `message_id`, `answer`) VALUES ("' . $dateMessage .
-            '",' . $_SESSION['user_id'] . ',' . $_REQUEST['message_id'] . ',"' . $_REQUEST['newAnswer'] . '");';
-        $addAnswer = mysqli_query($link, $querySendAnswer);
+        $answerDao->newAnswer($dateMessage, $_SESSION['user_id'], $_REQUEST['newAnswer'], $_REQUEST['message_id']);
     };
 
     $viewMessage = 10;
@@ -51,22 +31,11 @@
 
     $numPost = $_GET['page'] * $viewMessage - $viewMessage;
 
-    $resultMessage = mysqli_query($link, 'SELECT t_message.id AS id_message,
-                                                t_message.message AS message, 
-                                                t_user.name AS user_name_message,
-                                                t_user.familyname AS user_familyname_message,
-                                                t_message.date AS date_message,
-                                                t_user.avatar AS avatar,
-                                                t_user.sex AS sex
-                                                FROM t_message INNER JOIN 
-                                                t_user ON t_message.user_id = t_user.id
-                                                ORDER BY t_message.id DESC
-                                                LIMIT ' . $numPost . ', ' . $viewMessage . ';');
+    $messages = $messageDao->getMessages($numPost, $viewMessage);
 
-    $countMessage = mysqli_query($link, 'SELECT COUNT(t_message.id) AS count_message
-                                                FROM t_message ;');
-    $resultCountMessage = mysqli_fetch_array($countMessage);
-    $countPage = ceil($resultCountMessage[0]/$viewMessage);
+    $countMessage = $messageDao->getCountMessage();
+    $resultCountMessage = $countMessage->countMessage;
+    $countPage = ceil($resultCountMessage/$viewMessage);
 
     if (isset($_SESSION['user_id'])) {
         echo '  <form action="index.php" class="form-horizontal" name="sendMessage" method="post">
@@ -81,47 +50,57 @@
                         </form>';
     };
 
-    $i = 0;
-
-    while ($i < count($messages)) {
+    foreach ($messages as $message) {
         echo '<div class="post container">
                     <div class="user-block">
-                        <img class="img-circle img-bordered-sm" src="' . $messages[$i]["avatar"] . 'alt="user image">
+                        <img class="img-circle img-bordered-sm" src="' . $message->avatar . 'alt="user image">
                         <span class="username">
-                            <a href="#">' . $messages[$i]['name'] . ' ' . $messages[$i]['familyname'] . '</a>                                   
+                            <a href="#">' . $message->name . ' ' . $message->familyname . '</a>                                   
                         </span>
-                        <span class="description">Опубликовано - ' . $messages[$i]['date'] . '</span>
+                        <span class="description">Опубликовано - ' . $message->date . '</span>
                     </div>
                     <!-- /.user-block -->
                     <p>
-                        ' . $messages[$i]['message'] . '
+                        ' . $message->message . '
                     </p>
                     <ul class="list-inline container">';
 
-        $answers = $answerDao->getAnswersByMessage($messages[$i]['id']);
+        $answers = $answerDao->getAnswersByMessage($message->id);
+
         $resultAnswerCount = count($answers);
 
-        $resultCountMessageLike = $likeDao->getCountLikeByMessage($messages[$i]['id']);
+        $countlikes = $likeDao->getCountLikeByMessage($message->id);
 
         if (isset($_SESSION['user_id'])) {
-            $findLike = $likeDao->getWhoLikeByMessageByUser($messages[$i]['id'], $_SESSION['user_id']);
+
+            $findLike = $likeDao->getWhoLikeByMessageByUser($message->id, $_SESSION['user_id']);
+
             echo        '<li>
-                            <span class="badge" id="badgeId-' . $messages[$i]['id'] . '">' . $resultCountMessageLike[0] . '</span>
-                                <button id="buttonId-' . $messages[$i]['id'] . '" data-idMessage="' . $messages[$i]['id'] . '"
-                                        class="' . $findLike . '">   
+                            <span class="badge" id="badgeId-' . $message->id . '">' . $countlikes->countLike . '</span>
+                                <button id="buttonId-' . $message->id . '" data-idMessage="' . $message->id . '"
+                                        class="';
+
+            if ($findLike->likeByUser != 1){
+                echo 'likeButton btn btn-info btn-sm';
+            }
+            else{
+                echo 'likeButton btn btn-danger btn-sm';
+            }
+
+            echo                                                            '">   
                                     <i class="far fa-thumbs-up" ></i> Like
                                 </button >
                         </li >';
         }
         else{
             echo        '<li>
-                            <span class="badge" id="badgeId-' . $messages[$i]['id'] . '">' . $resultCountMessageLike[0] . '</span>
+                            <span class="badge" id="badgeId-' . $message->id . '">' . $countlikes->countLike . '</span>
                                     <i class="far fa-thumbs-up" ></i> Like
                         </li >';
         };
 
         echo            '<li class="pull-right">
-                            <a href="#spoiler-' . $messages[$i]['id'] . '" data-toggle="collapse" class="link-black text-sm">
+                            <a href="#spoiler-' . $message->id . '" data-toggle="collapse" class="link-black text-sm">
                                 <i class="far fa-comments"></i> Комментариев
                                 (' . $resultAnswerCount . ')
                             </a>
@@ -132,7 +111,7 @@
                         <div class="input-group">
                             <input class="form-control input-sm" autocomplete="off" name="newAnswer" type="text" placeholder="Напишите комментарий">
                             <span class="input-group-btn">
-                                <button type="submit"  class="btn btn-sm btn-primary btn-flat" name="message_id" value="' . $messages[$i]['id'] . '">
+                                <button type="submit"  class="btn btn-sm btn-primary btn-flat" name="message_id" value="' . $message->id . '">
                                                        <i class="fas fa-share-square"></i>
                                 </button>
                             </span>
@@ -141,37 +120,31 @@
         };
         echo '</div>
               <!-- /.post -->';
-                
-
 
         if ($resultAnswerCount != 0) {
-            echo '<div class="collapse container" id="spoiler-' . $messages[$i]['id'] . '">
+            echo '<div class="collapse container" id="spoiler-' . $message->id . '">
                                 <div class="well">
                                     <div class="box box-warning direct-chat direct-chat-warning">
                                         <div class="box-body">
                                             <div class="direct-chat-messages">';
 
+            foreach ($answers as $answer) {
 
-
-            $j = 0;
-
-            while ($j < count($answers)) {
-
-                if ((isset($_SESSION['user_id'])) && ($_SESSION['user_id'] == $answers[$j]['nameId'])) {
+                if ((isset($_SESSION['user_id'])) && ($_SESSION['user_id'] == $answer->user_id)) {
                     echo '
                                                     <!-- Message. Default to the left -->
                                                     <div class="direct-chat-msg">
                                                       <div class="direct-chat-info clearfix">
                                                         <span class="direct-chat-name pull-left">' .
-                        $answers[$j]['name'] . ' ' . $answers[$j]['familyname'] . '
+                        $answer->name . ' ' . $answer->familyname . '
                                                         </span>
-                                                        <span class="direct-chat-timestamp pull-right">' . $answers[$j]['date'] . '</span>
+                                                        <span class="direct-chat-timestamp pull-right">' . $answer->date . '</span>
                                                       </div>
                                                       <!-- /.direct-chat-info -->
-                                                      <img class="direct-chat-img" src="' . $answers[$j]['avatar'] . '" alt="message user image">
+                                                      <img class="direct-chat-img" src="' . $answer->avatar . '" alt="message user image">
                                                       <!-- /.direct-chat-img -->
                                                       <div class="direct-chat-text">' .
-                        $answers[$j]['answer'] . '
+                        $answer->answer . '
                                                       </div>
                                                       <!-- /.direct-chat-text -->
                                                   </div>
@@ -182,22 +155,20 @@
                                                     <div class="direct-chat-msg right">
                                                       <div class="direct-chat-info clearfix">
                                                         <span class="direct-chat-name pull-right">' .
-                        $answers[$j]['name'] . ' ' . $answers[$j]['familyname'] . '
+                        $answer->name . ' ' . $answer->familyname . '
                                                         </span>
-                                                        <span class="direct-chat-timestamp pull-left">' . $answers[$j]['date'] . '</span>
+                                                        <span class="direct-chat-timestamp pull-left">' . $answer->date . '</span>
                                                       </div>
                                                       <!-- /.direct-chat-info -->
-                                                      <img class="direct-chat-img" src="' . $answers[$j]['avatar'] . '" alt="message user image">
+                                                      <img class="direct-chat-img" src="' . $answer->avatar . '" alt="message user image">
                                                       <!-- /.direct-chat-img -->
                                                       <div class="direct-chat-text">
-                                                        ' . $answers[$j]['date'] . '
+                                                        ' . $answer->date . '
                                                       </div>
                                                       <!-- /.direct-chat-text -->
                                                   </div>
                                                   <!-- /.direct-chat-msg -->';
                 };
-
-                $j++;
 
             };
             echo '</div>
@@ -212,8 +183,6 @@
                                 </div>';
         };
     };
-
-
 
     echo                        '<nav class="text-center">
                                     <ul class="pagination pagination-sm">';
@@ -318,6 +287,6 @@
     };
 
     echo                            '</ul>
-                                </nav>';*/
+                                </nav>';
 
 ?>

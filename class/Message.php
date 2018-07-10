@@ -7,6 +7,7 @@
         public $familyname;
         public $date;
         public $avatar;
+        public $countMessage;
 
     };
 
