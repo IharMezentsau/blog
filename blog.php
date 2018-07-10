@@ -4,14 +4,30 @@
 
     $DB = new Db();
     $dataBase = $DB->getDb();
+
     $messageDao = new MessageDao($dataBase);
     $messages = $messageDao->getMessages();
-    echo '<script>alert('.$messages[0].');</script>';
-    /*while ($messages) {
-        echo $messages[0];
+
+    $answerDao = new AnswerDao($dataBase);
+    $answer = $answerDao->getAnswersByMessage(4);
+
+    //$likeDao = new LikeDao($dataBase);
+
+    foreach ($answer as $value) {
+        echo $value->answer;
+        echo '<br/>';
+        echo $value->id;
+        echo '<br/>';
+    };
+    /*foreach ($messages as $value) {
+        echo $value->message;
+        echo '<br/>';
+        echo $value->id;
+        echo '<br/>';
     };*/
 
-    if (isset($_REQUEST['newMessage']) && ($_REQUEST['newMessage'] != "")){
+
+    /*if (isset($_REQUEST['newMessage']) && ($_REQUEST['newMessage'] != "")){
         $querySendMessage = 'INSERT INTO t_message(`date`, `user_id`, `message`) VALUES ("' . $dateMessage .
             '",' . $_SESSION['user_id'] . ',"' . $_REQUEST['newMessage'] . '");';
         $addMessage = mysqli_query($link, $querySendMessage);
@@ -26,11 +42,11 @@
     $viewMessage = 10;
 
     if (isset($_GET['page'])) {
-        $i = $_GET['page'];
+        $p = $_GET['page'];
     }
     else {
-        $i = 1;
-        $_GET['page'] = $i;
+        $p = 1;
+        $_GET['page'] = $p;
     };
 
     $numPost = $_GET['page'] * $viewMessage - $viewMessage;
@@ -65,74 +81,49 @@
                         </form>';
     };
 
-    while ($row = mysqli_fetch_assoc($resultMessage)) {
+    $i = 0;
+
+    while ($i < count($messages)) {
         echo '<div class="post container">
                     <div class="user-block">
-                        <img class="img-circle img-bordered-sm" src="';
-        if ($row['avatar'] != null) {
-            echo $row['avatar'];
-        } else {
-            if ($row['sex'] == 'M') {
-                echo 'img/male.jpg';
-            } elseif ($row['sex'] == 'F') {
-                echo 'img/female.jpg';
-            } elseif ($row['sex'] == 'U') {
-                echo 'img/unknow.jpg';
-            };
-        };
-        $quaryAnswerCount = 'SELECT COUNT(t_answer_message.id) AS answer_count FROM t_answer_message 
-                                                WHERE t_answer_message.message_id = ' . $row['id_message'] . ';';
-        $answerCount = mysqli_query($link, $quaryAnswerCount);
-        $resultAnswerCount = mysqli_fetch_array($answerCount);
-        echo '" alt="user image">
+                        <img class="img-circle img-bordered-sm" src="' . $messages[$i]["avatar"] . 'alt="user image">
                         <span class="username">
-                                          <a href="#">' . $row['user_name_message'] . ' ' . $row['user_familyname_message'] . '</a>                                   
-                                        </span>
-                        <span class="description">Опубликовано - ' . $row['date_message'] . '</span>
+                            <a href="#">' . $messages[$i]['name'] . ' ' . $messages[$i]['familyname'] . '</a>                                   
+                        </span>
+                        <span class="description">Опубликовано - ' . $messages[$i]['date'] . '</span>
                     </div>
                     <!-- /.user-block -->
                     <p>
-                        ' . $row['message'] . '
+                        ' . $messages[$i]['message'] . '
                     </p>
                     <ul class="list-inline container">';
 
-        $countMessageLike = mysqli_query($link, "SELECT COUNT(user_id) FROM t_like WHERE message_id =" . $row['id_message'] . ";");
-        $resultCountMessageLike = mysqli_fetch_array($countMessageLike);
+        $answers = $answerDao->getAnswersByMessage($messages[$i]['id']);
+        $resultAnswerCount = count($answers);
+
+        $resultCountMessageLike = $likeDao->getCountLikeByMessage($messages[$i]['id']);
 
         if (isset($_SESSION['user_id'])) {
+            $findLike = $likeDao->getWhoLikeByMessageByUser($messages[$i]['id'], $_SESSION['user_id']);
             echo        '<li>
-                            <span class="badge" id="badgeId-' . $row['id_message'] . '">' . $resultCountMessageLike[0] . '</span>
-                                <button id="buttonId-' . $row['id_message'] . '" data-idMessage="' . $row['id_message'] . '"
-                                        class="';
-            $queryFindLike = "SELECT *
-                                FROM t_like
-                                WHERE `user_id`='". $_SESSION['user_id'] ."' AND `message_id`='". $row['id_message'] ."'
-                                LIMIT 1;";
-            $sqlFindLike = mysqli_query($link, $queryFindLike);
-
-            if (mysqli_num_rows($sqlFindLike) != 1) {
-                echo                                'likeButton btn btn-info btn-sm';
-            }
-            else{
-                echo                                'likeButton btn btn-danger btn-sm';
-            };
-
-            echo                                                                '">   
+                            <span class="badge" id="badgeId-' . $messages[$i]['id'] . '">' . $resultCountMessageLike[0] . '</span>
+                                <button id="buttonId-' . $messages[$i]['id'] . '" data-idMessage="' . $messages[$i]['id'] . '"
+                                        class="' . $findLike . '">   
                                     <i class="far fa-thumbs-up" ></i> Like
                                 </button >
                         </li >';
         }
         else{
             echo        '<li>
-                            <span class="badge" id="badgeId-' . $row['id_message'] . '">' . $resultCountMessageLike[0] . '</span>
+                            <span class="badge" id="badgeId-' . $messages[$i]['id'] . '">' . $resultCountMessageLike[0] . '</span>
                                     <i class="far fa-thumbs-up" ></i> Like
                         </li >';
         };
 
         echo            '<li class="pull-right">
-                            <a href="#spoiler-' . $row['id_message'] . '" data-toggle="collapse" class="link-black text-sm">
+                            <a href="#spoiler-' . $messages[$i]['id'] . '" data-toggle="collapse" class="link-black text-sm">
                                 <i class="far fa-comments"></i> Комментариев
-                                (' . $resultAnswerCount[0] . ')
+                                (' . $resultAnswerCount . ')
                             </a>
                         </li>
                     </ul>';
@@ -141,7 +132,7 @@
                         <div class="input-group">
                             <input class="form-control input-sm" autocomplete="off" name="newAnswer" type="text" placeholder="Напишите комментарий">
                             <span class="input-group-btn">
-                                <button type="submit"  class="btn btn-sm btn-primary btn-flat" name="message_id" value="' . $row['id_message'] . '">
+                                <button type="submit"  class="btn btn-sm btn-primary btn-flat" name="message_id" value="' . $messages[$i]['id'] . '">
                                                        <i class="fas fa-share-square"></i>
                                 </button>
                             </span>
@@ -151,62 +142,36 @@
         echo '</div>
               <!-- /.post -->';
                 
-            
-        if ($resultAnswerCount[0] != 0) {
-            echo '<div class="collapse container" id="spoiler-' . $row['id_message'] . '">
-                                <div class="well">';
 
-            $message_id = $row['id_message'];
 
-            $quaryResultAnswer = 'SELECT t_answer_message.id AS id_answer,
-                                                    t_answer_message.answer AS answer,
-                                                    t_user.name AS user_name_answer,
-                                                    t_user.familyname AS user_familyname_answer,
-                                                    t_answer_message.date AS date_answer,
-                                                    t_user.avatar AS avatar_answer,
-                                                    t_user.sex AS sex_answer,
-                                                    t_answer_message.user_id AS answer_message_user_id
-                                                    FROM t_answer_message INNER JOIN 
-                                                    t_user ON t_answer_message.user_id = t_user.id
-                                                    INNER JOIN t_message ON 
-                                                    t_answer_message.message_id = t_message.id 
-                                                    WHERE t_answer_message.message_id = ' . $row['id_message'] . '
-                                                    ORDER BY t_answer_message.id DESC;';
-            $resultAnswer = mysqli_query($link, $quaryResultAnswer);
+        if ($resultAnswerCount != 0) {
+            echo '<div class="collapse container" id="spoiler-' . $messages[$i]['id'] . '">
+                                <div class="well">
+                                    <div class="box box-warning direct-chat direct-chat-warning">
+                                        <div class="box-body">
+                                            <div class="direct-chat-messages">';
 
-            echo '<div class="box box-warning direct-chat direct-chat-warning">
-                                            <div class="box-body">
-                                                <div class="direct-chat-messages">';
 
-            while ($row = mysqli_fetch_assoc($resultAnswer)) {
 
-                if ((isset($_SESSION['user_id'])) && ($_SESSION['user_id'] == $row['answer_message_user_id'])) {
+            $j = 0;
+
+            while ($j < count($answers)) {
+
+                if ((isset($_SESSION['user_id'])) && ($_SESSION['user_id'] == $answers[$j]['nameId'])) {
                     echo '
                                                     <!-- Message. Default to the left -->
                                                     <div class="direct-chat-msg">
                                                       <div class="direct-chat-info clearfix">
                                                         <span class="direct-chat-name pull-left">' .
-                        $row['user_name_answer'] . ' ' . $row['user_familyname_answer'] . '
+                        $answers[$j]['name'] . ' ' . $answers[$j]['familyname'] . '
                                                         </span>
-                                                        <span class="direct-chat-timestamp pull-right">' . $row['date_answer'] . '</span>
+                                                        <span class="direct-chat-timestamp pull-right">' . $answers[$j]['date'] . '</span>
                                                       </div>
                                                       <!-- /.direct-chat-info -->
-                                                      <img class="direct-chat-img" src="';
-                    if ($row['avatar_answer'] != null) {
-                        echo $row['avatar_answer'];
-                    } else {
-                        if ($row['sex_answer'] == 'M') {
-                            echo 'img/male.jpg';
-                        } elseif ($row['sex_answer'] == 'F') {
-                            echo 'img/female.jpg';
-                        } elseif ($row['sex_answer'] == 'U') {
-                            echo 'img/unknow.jpg';
-                        };
-                    };
-                    echo '" alt="message user image">
+                                                      <img class="direct-chat-img" src="' . $answers[$j]['avatar'] . '" alt="message user image">
                                                       <!-- /.direct-chat-img -->
                                                       <div class="direct-chat-text">' .
-                        $row['answer'] . '
+                        $answers[$j]['answer'] . '
                                                       </div>
                                                       <!-- /.direct-chat-text -->
                                                   </div>
@@ -217,33 +182,22 @@
                                                     <div class="direct-chat-msg right">
                                                       <div class="direct-chat-info clearfix">
                                                         <span class="direct-chat-name pull-right">' .
-                        $row['user_name_answer'] . ' ' . $row['user_familyname_answer'] . '
+                        $answers[$j]['name'] . ' ' . $answers[$j]['familyname'] . '
                                                         </span>
-                                                        <span class="direct-chat-timestamp pull-left">' . $row['date_answer'] . '</span>
+                                                        <span class="direct-chat-timestamp pull-left">' . $answers[$j]['date'] . '</span>
                                                       </div>
                                                       <!-- /.direct-chat-info -->
-                                                      <img class="direct-chat-img" src="';
-                    if ($row['avatar_answer'] != null) {
-                        echo $row['avatar_answer'];
-                    } else {
-                        if ($row['sex_answer'] == 'M') {
-                            echo 'img/male.jpg';
-                        } elseif ($row['sex_answer'] == 'F') {
-                            echo 'img/female.jpg';
-                        } elseif ($row['sex_answer'] == 'U') {
-                            echo 'img/unknow.jpg';
-                        };
-                    };
-                    echo '" alt="message user image">
+                                                      <img class="direct-chat-img" src="' . $answers[$j]['avatar'] . '" alt="message user image">
                                                       <!-- /.direct-chat-img -->
                                                       <div class="direct-chat-text">
-                                                        ' . $row['date_answer'] . '
+                                                        ' . $answers[$j]['date'] . '
                                                       </div>
                                                       <!-- /.direct-chat-text -->
                                                   </div>
                                                   <!-- /.direct-chat-msg -->';
                 };
 
+                $j++;
 
             };
             echo '</div>
@@ -264,41 +218,36 @@
     echo                        '<nav class="text-center">
                                     <ul class="pagination pagination-sm">';
 
-    if ($i == 1) {
+    if ($p == 1) {
         echo                            '<li class="disabled">
-                                            <a><i class="fas fa-angle-double-left"></i></a>';
+                                            <a><i class="fas fa-angle-double-left"></i></a>
+                                         </li>
+                                         <li class="disabled">
+                                            <a><i class="fas fa-chevron-circle-left"></i></a>
+                                         </li>';
     }
     else{
         echo                            '<li>
                                             <a href="index.php?page=1">
                                                 <i class="fas fa-angle-double-left"></i>
-                                            </a>';
-    };
-
-    echo                                '</li>';
-
-    if ($i == 1) {
-        echo                            '<li class="disabled">
-                                            <a><i class="fas fa-chevron-circle-left"></i></a>';
-    }
-    else{
-        echo                            '<li>
+                                            </a>
+                                         </li>
+                                         <li>
                                             <a href="index.php?page=' . ($_GET['page'] - 1) . '">
                                                 <i class="fas fa-chevron-circle-left"></i>
-                                            </a>';
+                                            </a>
+                                         </li>';
     };
 
-    echo                                '</li>';
-
-    $i = 0;
+    $p = 0;
 
     if ($countPage <= 10) {
-        while ($i++ < $countPage) {
+        while ($p++ < $countPage) {
 
-            if ($_GET['page'] == $i) {
-                echo '<li class="active" ><a href="index.php?page=' . $i . '" >' . $i . '</a></li >';
+            if ($_GET['page'] == $p) {
+                echo '<li class="active" ><a href="index.php?page=' . $p . '" >' . $p . '</a></li >';
             } else {
-                echo '<li><a href="index.php?page=' . $i . '" >' . $i . '</a></li >';
+                echo '<li><a href="index.php?page=' . $p . '" >' . $p . '</a></li >';
             };
 
         };
@@ -347,31 +296,28 @@
         echo                            '<li class="disabled">
                                             <a>
                                                 <i class="fas fa-chevron-circle-right"></i>
-                                            </a>';
+                                            </a>
+                                         </li>
+                                         <li class="disabled">
+                                            <a>    
+                                                <i class="fas fa-angle-double-right"></i>
+                                            </a>
+                                         </li>';
     }
     else{
         echo                            '<li>
                                             <a href="index.php?page=' . ($_GET['page'] + 1) . '">
                                                 <i class="fas fa-chevron-circle-right"></i>
-                                            </a>';
-    };
-    echo                                '   
-                                        </li>';
-    if ($_GET['page'] == $countPage) {
-        echo                            '<li class="disabled">
-                                            <a>    
-                                                <i class="fas fa-angle-double-right"></i>
-                                            </a>';
-    }
-    else{
-        echo                            '<li>
+                                            </a>
+                                         </li>
+                                         <li>
                                             <a href="index.php?page=' . $countPage . '">
                                                 <i class="fas fa-angle-double-right"></i>
-                                            </a>';
+                                            </a>
+                                         </li>';
     };
-    echo                                   '</li>
 
-                                    </ul>
-                                </nav>';
+    echo                            '</ul>
+                                </nav>';*/
 
 ?>

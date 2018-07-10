@@ -8,6 +8,8 @@
     include_once ('MessageDao.php');
     include_once ('User.php');
     include_once ('UserDao.php');
+    include_once ('Like.php');
+    include_once ('LikeDao.php');
 
     class Db{
 

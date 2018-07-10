@@ -7,7 +7,7 @@
         public $familyname;
         public $date;
         public $avatar;
-        public $messageId;
+        public $user_id;
 
     };
 

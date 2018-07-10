@@ -6,11 +6,11 @@
 
         public function getById($id){
 
-            $this->result = $this->data->query('SELECT id, email, name, familyname, 
+            $this->result = $this->data->prepare('SELECT id, email, name, familyname, 
                                             sex, avatar 
                                       FROM t_user 
-                                      WHERE id=:id');
-            $this->result->bindValue(':id', $id, PDO::PARAM_INT);
+                                      WHERE id= :id');
+            $this->result->bindValue(' :id', $id, PDO::PARAM_INT);
             $this->result->execute();
 
 
@@ -26,45 +26,45 @@
 
         public function updateName($id, $value){
 
-            $query = $this->data->$query("UPDATE t_user SET
-                                                name=:value
-                                                WHERE id=:id
+            $query = $this->data->prepare("UPDATE t_user SET
+                                                name= :value
+                                                WHERE id= :id
                                                 LIMIT 1");
-            $query->bindValue(':id', $id, PDO::PARAM_INT);
-            $query->bindValue(':value', $value, PDO::PARAM_STR);
+            $query->bindValue(' :id', $id, PDO::PARAM_INT);
+            $query->bindValue(' :value', $value, PDO::PARAM_STR);
             $query->execute();
 
         }
 
         public function updateFamilyname($id, $value){
 
-            $query =  $this->data->$query("UPDATE t_user SET
-                                                familyname=:value
-                                                WHERE id=:id
+            $query =  $this->data->prepare("UPDATE t_user SET
+                                                familyname= :value
+                                                WHERE id= :id
                                                 LIMIT 1");
-            $query->bindValue(':id', $id, PDO::PARAM_INT);
-            $query->bindValue(':value', $value, PDO::PARAM_STR);
+            $query->bindValue(' :id', $id, PDO::PARAM_INT);
+            $query->bindValue(' :value', $value, PDO::PARAM_STR);
             $query->execute();
 
         }
 
         public function updateGender($id, $value){
 
-            $query = $this->data->$query("UPDATE t_user SET
+            $query = $this->data->prepare("UPDATE t_user SET
                                                 sex=:value
-                                                WHERE id=:id
+                                                WHERE id= :id
                                                 LIMIT 1");
-            $query->bindValue(':id', $id, PDO::PARAM_INT);
-            $query->bindValue(':value', $value, PDO::PARAM_STR);
+            $query->bindValue(' :id', $id, PDO::PARAM_INT);
+            $query->bindValue(' :value', $value, PDO::PARAM_STR);
             $query->execute();
 
         }
 
         public function updateAvatar($id, $value){
 
-            $query = $this->data->$query("SELECT avatar,sex FROM t_user
-                                          WHERE id=:id LIMIT 1");
-            $query->bindValue(':id', $id, PDO::PARAM_INT);
+            $query = $this->data->prepare("SELECT avatar,sex FROM t_user
+                                          WHERE id= :id LIMIT 1");
+            $query->bindValue(' :id', $id, PDO::PARAM_INT);
             $query->execute();
 
             while ($row = $query->fetch_assoc()){
@@ -86,21 +86,21 @@
                 }
             }
 
-            $query = $this->data->query("UPDATE t_user SET
+            $query = $this->data->prepare("UPDATE t_user SET
                                                 avatar=:value
-                                                WHERE id=:id
+                                                WHERE id= :id
                                                 LIMIT 1");
-            $query->bindValue(':id', $id, PDO::PARAM_INT);
-            $query->bindValue(':value', $value, PDO::PARAM_STR);
+            //$query->bindValue(':id', $id, PDO::PARAM_INT);
+            //$query->bindValue(':value', $value, PDO::PARAM_STR);
             $query->execute();
 
         }
 
         public function autorisation($login, $password){
 
-            $this->result = $this->data->query('SELECT id FROM t_user WHERE email=:login AND password=:password LIMIT 1');
-            $this->result->bindValue(':login', $login, PDO::PARAM_STR);
-            $this->result->bindValue(':login', $login, PDO::PARAM_STR);
+            $this->result = $this->data->prepare('SELECT id FROM t_user WHERE email= :login AND password= :password LIMIT 1');
+            $this->result->bindValue(' :login', $login, PDO::PARAM_STR);
+            $this->result->bindValue(' :password', $password, PDO::PARAM_STR);
             $this->result->execute();
 
 
