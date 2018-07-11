@@ -2,9 +2,6 @@
 
     $dateMessage = date("Y/m/d H.i.s");
 
-    $DB = new Db();
-    $dataBase = $DB->getDb();
-
     $messageDao = new MessageDao($dataBase);
 
     $answerDao = new AnswerDao($dataBase);
@@ -21,15 +18,15 @@
 
     $viewMessage = 10;
 
-    if (isset($_GET['page'])) {
-        $p = $_GET['page'];
+    if (isset($_REQUEST['page'])) {
+        $p = $_REQUEST['page'];
     }
     else {
         $p = 1;
-        $_GET['page'] = $p;
+        $_REQUEST['page'] = $p;
     };
 
-    $numPost = $_GET['page'] * $viewMessage - $viewMessage;
+    $numPost = $_REQUEST['page'] * $viewMessage - $viewMessage;
 
     $messages = $messageDao->getMessages($numPost, $viewMessage);
 
@@ -115,6 +112,7 @@
                                                        <i class="fas fa-share-square"></i>
                                 </button>
                             </span>
+                            <input type="hidden" name="page" value="' . $p . '">
                         </div>
                     </form>';
         };
@@ -202,7 +200,7 @@
                                             </a>
                                          </li>
                                          <li>
-                                            <a href="index.php?page=' . ($_GET['page'] - 1) . '">
+                                            <a href="index.php?page=' . ($_REQUEST['page'] - 1) . '">
                                                 <i class="fas fa-chevron-circle-left"></i>
                                             </a>
                                          </li>';
@@ -213,7 +211,7 @@
     if ($countPage <= 10) {
         while ($p++ < $countPage) {
 
-            if ($_GET['page'] == $p) {
+            if ($_REQUEST['page'] == $p) {
                 echo '<li class="active" ><a href="index.php?page=' . $p . '" >' . $p . '</a></li >';
             } else {
                 echo '<li><a href="index.php?page=' . $p . '" >' . $p . '</a></li >';
@@ -222,7 +220,7 @@
         };
     }
     else{
-        switch ($_GET['page']){
+        switch ($_REQUEST['page']){
             case 1:
                 $arrayBiggerTen = array( 1, 2, 'null',($countPage - 1), $countPage);
                 break;
@@ -242,13 +240,13 @@
                 $arrayBiggerTen = array( 1, 2, 'null',($countPage - 1), $countPage);
                 break;
             default:
-                $arrayBiggerTen = array( 1, 'null',($_GET['page'] - 1), $_GET['page'], ($_GET['page'] + 1), 'null', $countPage);
+                $arrayBiggerTen = array( 1, 'null',($_REQUEST['page'] - 1), $_REQUEST['page'], ($_REQUEST['page'] + 1), 'null', $countPage);
                 break;
         };
 
         foreach ($arrayBiggerTen as $valueArrayPage) {
 
-            if ($_GET['page'] == $valueArrayPage) {
+            if ($_REQUEST['page'] == $valueArrayPage) {
                 echo '<li class="active" ><a href="index.php?page=' . $valueArrayPage . '" >' . $valueArrayPage . '</a></li >';
             }
             elseif ($valueArrayPage == 'null'){
@@ -261,7 +259,7 @@
         };
     };
 
-    if ($_GET['page'] == $countPage) {
+    if ($_REQUEST['page'] == $countPage) {
         echo                            '<li class="disabled">
                                             <a>
                                                 <i class="fas fa-chevron-circle-right"></i>
@@ -275,7 +273,7 @@
     }
     else{
         echo                            '<li>
-                                            <a href="index.php?page=' . ($_GET['page'] + 1) . '">
+                                            <a href="index.php?page=' . ($_REQUEST['page'] + 1) . '">
                                                 <i class="fas fa-chevron-circle-right"></i>
                                             </a>
                                          </li>

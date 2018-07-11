@@ -16,6 +16,12 @@
         <?php
 
             include_once ('bd.php');
+            include_once ('class/Db.php');
+
+            $DB = new Db();
+            $dataBase = $DB->getDb();
+
+            $user = new UserDao($dataBase);
 
             if (isset($_REQUEST['submit'])){
 
@@ -86,15 +92,14 @@
 
                     $validString = random_string($length, $chartypes);
 
+                    $unicueUser = $user->validUnicueLogin($login);
 
-                    $query = ("SELECT email FROM t_user WHERE email = '".$login."'");
-                    $sql = mysqli_query($link ,$query) or die (mysqli_error());
-
-                    if (mysqli_num_rows($sql) > 0){
+                    if ($unicueUser == 1){
                         echo 'NOT UNIQUE EMAIL';
                     }
                     else {
-                        if (isset($_REQUEST["newUserName"])) {
+                        $user->registration($login, $passwordHash, $date, $validString, $_REQUEST['newUserName']);
+                        /*if (isset($_REQUEST["newUserName"])) {
                             $userName = $_REQUEST["newUserName"];
                             $query = "INSERT INTO t_user (email, password, name, date, validstring, validreg, sex) 
                                       VALUES ('" . $login . "','" . $passwordHash . "','" . $userName . "','" . $date .
@@ -108,8 +113,8 @@
                                                     $validString . "','" . "FALSE" . "', 'U')";
                             $result = mysqli_query($link, $query) or die(mysqli_error());
                             echo "SUCCESS";
-                        }
-                    }
+                        }*/
+                    };
 
                 }
             };

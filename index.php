@@ -30,6 +30,10 @@
             session_start();
             include_once ('bd.php');
             include_once ('class/Db.php');
+
+            $DB = new Db();
+            $dataBase = $DB->getDb();
+
             include_once ('validAuth.php');
             include_once ('menu.php');
             include_once ('blog.php');

@@ -1,45 +1,3 @@
-<!--<div class="navbar navbar-inverse navbar-static-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responsive-menu">
-                <span class="sr-only">Открыть навигацию</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Логотип</a>
-        </div>
-        <div class="collapse navbar-collapse" id="responsive-menu">
-            <ul class="nav navbar-nav">
-                <li><a href="#">Пункт 1</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Пункт 2 <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Пункт 1</a></li>
-                        <li><a href="#">Пункт 2</a></li>
-                        <li><a href="#">Пункт 3</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Пункт 4</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Пункт 3</a></li>
-                <li><a href="#">Пункт 4</a></li>
-            </ul>
-            <form action="" class="navbar-form navbar-right">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="E-mail" value="">
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control" placeholder="Пароль" value="">
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt"></i> ВОЙТИ
-                </button>
-            </form>
-        </div>
-    </div>
-</div>-->
-
 <header class="main-header">
             <!-- Header Navbar: style can be found in header.less -->
 
@@ -71,50 +29,22 @@
         session_destroy();
     };
     if (isset($_SESSION['user_id'])) {
-        $resultUser = mysqli_query($link, 'SELECT t_user.avatar AS avatar,
-                                                        t_user.sex AS sex,
-                                                        t_user.name AS name,
-                                                        t_user.familyname AS familyname
-                                                        FROM t_user WHERE 
-                                                        t_user.id = ' . $_SESSION['user_id'] . ';');
+
+        $user = new UserDao($dataBase);
+        $dataUser = $user->getById($_SESSION['user_id']);
 
         echo                '<li class="dropdown user user-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <img src="';
-        while ($row = mysqli_fetch_assoc($resultUser)) {
-
-            if ($row['avatar'] != null) {
-                echo $row['avatar'];
-                $userAvatar = $row['avatar'];
-                } else {
-                if ($row['sex'] == 'M') {
-                    echo 'img/male.jpg';
-                    $userAvatar = 'img/male.jpg';
-                }
-                elseif ($row['sex'] == 'F') {
-                    echo 'img/female.jpg';
-                    $userAvatar = 'img/female.jpg';
-                }
-                elseif ($row['sex'] == 'U') {
-                    echo 'img/unknow.jpg';
-                    $userAvatar = 'img/unknow.jpg';
-                };
-            };
-            $userFullName = $row['name'] . ' ' . $row['familyname'];
-
-            echo                                            '" class="user-image" alt="User Image">';
-            echo                        '<span class="hidden-xs"> ' . $row['name'] . ' ' . $row['familyname'] . '</span>';
-        };
-
-        echo '
+                                    <img src="' . $dataUser->avatar . '" class="user-image" alt="User Image">
+                                    <span class="hidden-xs"> ' . $dataUser->name . ' ' . $dataUser->familyname . '</span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <!-- User image -->
                                     <li class="user-header">
-                                        <img src="' .  $userAvatar . '" class="img-circle" alt="User Image">
+                                        <img src="' .  $dataUser->avatar . '" class="img-circle" alt="User Image">
     
                                         <p>
-                                            ' . $userFullName . '
+                                            ' . $dataUser->name . ' ' . $dataUser->familyname . '
                                         </p>
                                     </li>
                                     <!-- Menu Footer-->
@@ -167,7 +97,6 @@
 ?>
 
                         <!-- Control Sidebar Toggle Button -->
-
 
                         </ul>
 

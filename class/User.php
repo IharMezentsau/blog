@@ -8,6 +8,8 @@
         public $familyname;
         public $gender;
         public $avatar;
+        public $date;
+        public $authorisation;
 
     };
 

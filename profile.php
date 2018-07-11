@@ -26,9 +26,13 @@
     <body  class="hold-transition skin-purple sidebar-mini layout-top-nav">
         <?php
             session_start();
-            $key = md5(uniqid(rand(),1));
 
             include_once ('bd.php');
+            include_once ('class/Db.php');
+
+            $DB = new Db();
+            $dataBase = $DB->getDb();
+
             include_once ('menu.php');
 
             // Пути загрузки файлов
@@ -40,221 +44,147 @@
             $size = 10240000;
 
             if (isset($_REQUEST["deleteAvatar"])) {
-                $queryAccaunt = "SELECT avatar
-                                FROM t_user
-                                WHERE `id`='". $_SESSION['user_id'] ."'
-                                LIMIT 1";
-                $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error().$queryAccaunt);
-                while ($row = mysqli_fetch_assoc($accaunt)) {
-                    if ($row['avatar'] != NULL) {
-                        unlink($row['avatar']);
-                    };
-                };
-                $queryAccauntImg = "UPDATE t_user SET avatar = NULL 
-                                    WHERE `id`=" . $_SESSION['user_id'] . "
-                                    LIMIT 1";
-                $accaunt = mysqli_query($link, $queryAccauntImg) or trigger_error(mysqli_error() . $queryAccauntImg);
-
+                $user->updateAvatar($_SESSION['user_id'], 'NULL');
             };
 
 
         // Обработка запроса
             if (isset($_REQUEST['editProfile']) && ($_POST['editProfile'] == 'update')) {
+
                 $dateAva = date("Y_m_d_H_i_s");
                 $fileExtension = pathinfo($_FILES['avatarAcc']['name'], PATHINFO_EXTENSION);
                 $nameAva = $_SESSION['user_id'] . $dateAva . "." . $fileExtension;
-                if (is_uploaded_file($_FILES['avatarAcc']['tmp_name'])) {
-                    // Проверяем тип файла
-                    //if (!in_array($_FILES['avatarAcc']['type'], $types)) {
-                    //    die('Запрещённый тип файла. <a href="?">Попробовать другой файл?</a>');
-                    //};
-                    // Проверяем размер файла
-                    //if ($_FILES['avatarAcc']['size'] > $size) {
-                    //    die('Слишком большой размер файла. <a href="?">Попробовать другой файл?</a>');
-                    //};
-                    // Загрузка файла и вывод сообщения
-                    if (@copy($_FILES['avatarAcc']['tmp_name'], $path . $nameAva)) {
-                        $queryAccaunt = "SELECT avatar
-                            FROM t_user
-                            WHERE `id`='". $_SESSION['user_id'] ."'
-                            LIMIT 1";
-                        $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error().$queryAccaunt);
-                        while ($row = mysqli_fetch_assoc($accaunt)){
-                            if ($row['avatar'] != NULL) {
-                                unlink($row['avatar']);
-                            };
-                        };
-                        $queryAccauntImg = "UPDATE t_user SET
-                                            avatar = '" . $path . $nameAva . "'
-                                WHERE `id`=" . $_SESSION['user_id'] . "
-                                LIMIT 1";
-                        $accaunt = mysqli_query($link, $queryAccauntImg) or trigger_error(mysqli_error() . $queryAccauntImg);
-                    };
+
+                if (($_POST['gender']) != $dataUser->gender) {
+                    $user->updateGender($_SESSION['user_id'], $_POST['gender']);
                 };
 
+                if (is_uploaded_file($_FILES['avatarAcc']['tmp_name'])) {
+                    if (@copy($_FILES['avatarAcc']['tmp_name'], $path . $nameAva)) {
+                        $user->updateAvatar($_SESSION['user_id'], $path . $nameAva);
+                    };
+                };
 
                 if (($_REQUEST['userName']) != "") {
-                    $queryAccaunt = "UPDATE t_user SET
-                                            name = '" . $_REQUEST['userName'] . "'
-                                WHERE `id`=" . $_SESSION['user_id'] . "
-                                LIMIT 1";
-                    $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error() . $queryAccaunt);
+                    $user->updateName($_SESSION['user_id'], $_REQUEST['userName']);
                 };
+
                 if (($_REQUEST['familyName']) != "") {
-                    $queryAccaunt = "UPDATE t_user SET
-                                            familyname = '" . $_REQUEST['familyName'] . "'
-                                WHERE `id`=" . $_SESSION['user_id'] . "
-                                LIMIT 1";
-                    $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error() . $queryAccaunt);
+                    $user->updateFamilyname($_SESSION['user_id'], $_REQUEST['familyName']);
                 };
-                if (($_POST['gender']) != "") {
-                    $queryAccaunt = "UPDATE t_user SET
-                                            sex = '" . $_REQUEST['gender'] . "'
-                                WHERE `id`=" . $_SESSION['user_id'] . "
-                                LIMIT 1";
-                    $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error() . $queryAccaunt);
-                };
-
 
             };
 
-            $queryAccaunt = "SELECT email, password, name, familyname, date, avatar, sex
-                            FROM t_user
-                            WHERE `id`='". $_SESSION['user_id'] ."'
-                            LIMIT 1";
-            $accaunt = mysqli_query($link, $queryAccaunt) or trigger_error(mysqli_error().$queryAccaunt);
+            $dataUser = $user->getById($_SESSION['user_id']);
 
+            $options = array( 'U'=>'Скрыт', 'M'=>'Мужской', 'F'=>'Женский');
+            $valueSex = $options[$dataUser->gender];
 
+            echo '<div class="conteiner">
 
-            while ($row = mysqli_fetch_assoc($accaunt)) {
-                $options = array( 'U'=>'Скрыт', 'M'=>'Мужской', 'F'=>'Женский');
-                $valueSex = $options[$row['sex']];
+                      <!-- Profile Image -->
+                      <div class="box box-primary">
+                        <div class="box-body box-profile">
+                          <img class="profile-user-img img-responsive img-circle" src="' . $dataUser->avatar . '" alt="User profile picture">';
 
-                    echo '<div class="conteiner">
+            if (isset($_POST['editProfile']) && ($_POST['editProfile'] == 'change')){
 
-                              <!-- Profile Image -->
-                              <div class="box box-primary">
-                                <div class="box-body box-profile">
-                                  <img class="profile-user-img img-responsive img-circle" src="';
-                    if ($row['avatar'] != null) {
-                        echo                                                                    $row['avatar'];
-                    }
-                    else {
-                        if ($row['sex'] == 'M') {echo                                           'img/male.jpg';}
-                        elseif ($row['sex'] == 'F') {echo                                       'img/female.jpg';}
-                        elseif ($row['sex'] == 'U') {echo                                       'img/unknow.jpg';};
-                    };
-                    echo                                                                                        '" alt="User profile picture">';
-
-                    if (isset($_POST['editProfile']) && ($_POST['editProfile'] == 'change')){
-                        /*echo '<input class="form-control input-group-lg" autocomplete="off" name="newMessage" type="text" placeholder="Напишите сообщение">
-                                <span class="input-group-btn">
-                                    <button type="submit"  class="btn btn-group-lg btn-primary btn-flat btn-group" name="message_id" >
-                                                           <i class="fas fa-share-square"></i>
-                                    </button>
-                                </span>';*/
-
-                        echo        '<form enctype="multipart/form-data" class="form-horizontal" method="post" action="profile.php">
-                                        
-                                            <input type="file" accept="image/*" name="avatarAcc" id="selectedFile" style="display: none;" >
-                                            <ul class="list-group list-group-unbordered">
-                                                <li class="list-group-item">
-                                                    <div class="btn-group btn-group-justified">';
-                        if ($row['avatar'] != NULL) {
-                            echo                '    <div class="btn-group">
-                                                        <button type="submit" name="deleteAvatar"  class="btn btn-danger btn-block btn-group">
-                                                            <i class="far fa-trash-alt"></i> Удалить аватар
-                                                        </button>
-                                                    </div>';
-                        };
-                        echo                           '<div class="btn-group">
-                                                    <input type="button" value="Выбрать аватар" class="btn btn-default btn-block" 
-                                                            onclick="document.getElementById(\'selectedFile\').click();">
-                                                        </div>    
-                                                    </div>
-                                                    <p class="text-muted text-center" id="fileNameLoad"></p>  
-                                                </li>
-                                            </ul>          
-                                        
-                                        <h3 class="profile-username text-center">' . $row['name'] . ' ' . $row['familyname'] . '</h3>
-                                        <p class="text-muted text-center">eMail: ' . $row['email'] . '</p>
-                                        
-                                        
-                                              <div class="box-body">
-                                                <div class="form-group">
-                                                  <label for="inputName" class="col-sm-2 control-label">Имя</label>                                            
-                                                  <div class="col-sm-10">
-                                                    <input type="text" class="form-control" name="userName" id="inputName" placeholder="' . $row['name'] . '">
-                                                  </div>
-                                                </div>
-                                                <div class="form-group">
-                                                  <label for="inputFamilyName" class="col-sm-2 control-label">Фамилия</label>
-                                                  <div class="col-sm-10">
-                                                    <input type="text" class="form-control" name="familyName" id="inputFamilyName" placeholder="' . $row['familyname'] . '">
-                                                  </div>
-                                                </div>
-                                                <div class="form-group">
-                                                  <label for="inputSex" class="col-sm-2 control-label">Пол</label>
-                                                  <div class="col-sm-10">
-                                                    <select name="gender" class="form-control" id="inputSex" size="3">';
-
-                        foreach($options as $value=>$name) {
-                            if($value == $row['sex']) {
-                                echo                    '<option selected value="' . $value . '">' . $name . '</option>';
-                            }
-                            else {
-                                echo                    '<option value="' . $value . '">' . $name . '</option>';
-                            };
-                        };
-
-                    echo                            '</select>
-                                                  </div>
-                                                </div>
-                                              </div>
-      
-                                              <!-- /.box-body -->
-                                            <div class="box-footer">
-                                                <button type="submit"  name="editProfile" value="cancel" class="btn btn-default">Отмена</button>
-                                                <button type="submit" name="editProfile" value="update" class="btn btn-info pull-right">
-                                                    <i class="fas fa-file-upload"></i> Обновить данные
+                echo        '<form enctype="multipart/form-data" class="form-horizontal" method="post" action="profile.php">
+                                
+                                    <input type="file" accept="image/*" name="avatarAcc" id="selectedFile" style="display: none;" >
+                                    <ul class="list-group list-group-unbordered">
+                                        <li class="list-group-item">
+                                            <div class="btn-group btn-group-justified">';
+                if ($dataUser->avatar != 'img/male.jpg' && $dataUser->avatar != 'img/female.jpg' && $dataUser->avatar != 'img/unknow.jpg') {
+                    echo                '    <div class="btn-group">
+                                                <button type="submit" name="deleteAvatar"  class="btn btn-danger btn-block btn-group">
+                                                    <i class="far fa-trash-alt"></i> Удалить аватар
                                                 </button>
+                                            </div>';
+                };
+                echo                           '<div class="btn-group">
+                                            <input type="button" value="Выбрать аватар" class="btn btn-default btn-block" 
+                                                    onclick="document.getElementById(\'selectedFile\').click();">
+                                                </div>    
                                             </div>
-                                              <!-- /.box-footer -->    
-                                    
-                                    </form>';
+                                            <p class="text-muted text-center" id="fileNameLoad"></p>  
+                                        </li>
+                                    </ul>          
+                                
+                                <h3 class="profile-username text-center">' . $dataUser->name . ' ' . $dataUser->familyname . '</h3>
+                                <p class="text-muted text-center">eMail: ' . $dataUser->email . '</p>
+                                                        
+                                      <div class="box-body">
+                                        <div class="form-group">
+                                          <label for="inputName" class="col-sm-2 control-label">Имя</label>                                            
+                                          <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="userName" id="inputName" placeholder="' . $dataUser->name . '">
+                                          </div>
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="inputFamilyName" class="col-sm-2 control-label">Фамилия</label>
+                                          <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="familyName" id="inputFamilyName" placeholder="' . $dataUser->familyname . '">
+                                          </div>
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="inputSex" class="col-sm-2 control-label">Пол</label>
+                                          <div class="col-sm-10">
+                                            <select name="gender" class="form-control" id="inputSex" size="3">';
+
+                foreach($options as $value=>$name) {
+                    if($value == $dataUser->gender) {
+                        echo                    '<option selected value="' . $value . '">' . $name . '</option>';
                     }
                     else {
-                        echo            '<h3 class="profile-username text-center">' . $row['name'] . ' ' . $row['familyname'] . '</h3>
-                        
-                                        <p class="text-muted text-center">eMail: ' . $row['email'] . '</p>
-                                            
-                                        <ul class="list-group list-group-unbordered">
-                                            <li class="list-group-item">
-                                              <b>Дата регистрации</b> <a class="pull-right">' . $row['date'] . '</a>
-                                            </li>
-                                            <li class="list-group-item">
-                                              <b>Пол</b> <a class="pull-right">' . $valueSex . '</a>
-                                            </li>
-                                        </ul>
-                                        <form enctype="multipart/form-data"  method="post" action="profile.php">
-                                              <button type="submit" name="editProfile" value="change" class="btn btn-primary btn-block">
-                                                    <b>Изменить данные</b>
-                                              </button>
-                                        </form>';
-
-                    echo            '</div>
-                                    <!-- /.box-body -->
-                                  </div>
-                                  <!-- /.box -->
-                            
-                                      
-                                </div>
-                                <!-- /.col -->';
+                        echo                    '<option value="' . $value . '">' . $name . '</option>';
                     };
+                };
 
+            echo                            '</select>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <!-- /.box-body -->
+                                    <div class="box-footer">
+                                        <button type="submit"  name="editProfile" value="cancel" class="btn btn-default">Отмена</button>
+                                        <button type="submit" name="editProfile" value="update" class="btn btn-info pull-right">
+                                            <i class="fas fa-file-upload"></i> Обновить данные
+                                        </button>
+                                    </div>
+                                      <!-- /.box-footer -->    
+                            
+                            </form>';
+            }
+            else {
+                echo            '<h3 class="profile-username text-center">' . $dataUser->name . ' ' . $dataUser->familyname . '</h3>
+                
+                                <p class="text-muted text-center">eMail: ' . $dataUser->email . '</p>
+                                    
+                                <ul class="list-group list-group-unbordered">
+                                    <li class="list-group-item">
+                                      <b>Дата регистрации</b> <a class="pull-right">' . $dataUser->date . '</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                      <b>Пол</b> <a class="pull-right">' . $valueSex . '</a>
+                                    </li>
+                                </ul>
+                                <form enctype="multipart/form-data"  method="post" action="profile.php">
+                                      <button type="submit" name="editProfile" value="change" class="btn btn-primary btn-block">
+                                            <b>Изменить данные</b>
+                                      </button>
+                                </form>';
+
+            echo            '</div>
+                            <!-- /.box-body -->
+                          </div>
+                          <!-- /.box -->
+                    
+                              
+                        </div>
+                        <!-- /.col -->';
             };
-
-
 
         ?>
 

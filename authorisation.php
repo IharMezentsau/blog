@@ -14,7 +14,11 @@
     <body>
         <?php
             session_start();
-            include_once ('bd.php');
+            //include_once ('bd.php');
+            include_once ('class/Db.php');
+
+            $DB = new Db();
+            $dataBase = $DB->getDb();
         ?>
         <style>
             /* Demo Background */
